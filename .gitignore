@@ -42,4 +42,12 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# Generated file
+*.config.dart
+*.mapper.dart
+*.g.dart
+*.gen.dart
+
+# Custom
 /test
+.env
