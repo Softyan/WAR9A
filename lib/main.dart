@@ -3,9 +3,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'config/env.dart';
 import 'di/injection.dart';
 import 'res/war9a_colors.dart';
-import 'screens/splash_screen.dart';
+import 'screens/splash/splash_screen.dart';
 
-import 'utils/app_route.dart';
+import 'utils/export_utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'War9a',
+        title: Constants.appName,
         navigatorKey: AppRoute.navigatorKey,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: War9aColors.primary),

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 
-import '../../../res/assets.gen.dart';
-import '../../../res/war9a_colors.dart';
+import '../res/assets.gen.dart';
+import '../res/war9a_colors.dart';
 
 class HeaderWidget extends StatelessWidget {
-  const HeaderWidget({super.key});
+  final double? height;
+  const HeaderWidget({super.key, this.height = 200});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 200,
+      height: height,
       decoration: BoxDecoration(
           color: War9aColors.primaryColor,
           borderRadius: const BorderRadius.only(

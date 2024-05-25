@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class AppSpacer extends StatelessWidget {
+class SpacerWidget extends StatelessWidget {
   final double size;
   final bool isHorizontal;
-  const AppSpacer(this.size, {super.key, this.isHorizontal = false});
+  const SpacerWidget(this.size, {super.key, this.isHorizontal = false});
 
   @override
   Widget build(BuildContext context) {

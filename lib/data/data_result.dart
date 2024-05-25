@@ -11,6 +11,10 @@ sealed class BaseResult<T> {
         DataResult(:final data) => result(data),
         ErrorResult(:final message) => error(message)
       };
+
+  T get onDataResult => (this as DataResult).data;
+
+  String get onErrorResult => (this as ErrorResult).message;
 }
 
 @MappableClass()

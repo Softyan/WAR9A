@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
-class AppTextField extends StatelessWidget {
+class TextFieldWidget extends StatelessWidget {
   final String name;
   final String? label;
   final String? hint;
@@ -15,7 +15,7 @@ class AppTextField extends StatelessWidget {
   final String? initialValue;
   final AutovalidateMode? validateMode;
   final double? borderRadius;
-  const AppTextField(this.name,
+  const TextFieldWidget(this.name,
       {super.key,
       this.label,
       this.hint,

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
-import '../../../components/textfield.dart';
+import '../../../components/textfield_widget.dart';
 
-typedef OnViewPassword = Function();
+typedef OnViewPassword = void Function();
 
 class FormLogin extends StatelessWidget {
   final Key? formKey;
@@ -24,7 +24,7 @@ class FormLogin extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              AppTextField(
+              TextFieldWidget(
                 'email',
                 label: 'Email',
                 hint: 'jhondoe@email.com',
@@ -32,7 +32,7 @@ class FormLogin extends StatelessWidget {
                 validators: [FormBuilderValidators.email()],
               ),
               const SizedBox(height: 8),
-              AppTextField(
+              TextFieldWidget(
                 'password',
                 label: 'Password',
                 validateMode: AutovalidateMode.onUserInteraction,

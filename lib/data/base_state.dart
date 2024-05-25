@@ -1,9 +1,9 @@
 abstract class BaseState {
-  final String errorMessage;
+  final String message;
   final StatusState statusState;
 
   const BaseState(
-      {this.errorMessage = '', this.statusState = StatusState.idle});
+      {this.message = '', this.statusState = StatusState.idle});
 
   bool get isLoading => statusState == StatusState.loading;
   bool get isSuccess => statusState == StatusState.success;

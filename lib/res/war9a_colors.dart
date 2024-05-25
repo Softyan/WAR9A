@@ -4,6 +4,8 @@ class War9aColors {
   War9aColors._();
 
   static Color primaryColor = HexColor('#00639B');
+  static Color blueInfo = HexColor('#D4F5FF');
+  static Color blueTextInfo = HexColor('#0092DC');
   
   static MaterialColor primary = MaterialColor(
     primaryColor.value,
