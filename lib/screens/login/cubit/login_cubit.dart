@@ -16,9 +16,18 @@ class LoginCubit extends Cubit<LoginState> {
   void login(String email, String password) async {
     emit(state.copyWith(statusState: StatusState.loading));
 
-    final resultCheckAuth = _authRepository.checkStatusAuth();
+    LoginState newState = _checkPrefillForm();
+    emit(newState);
+    if (newState.statusAuth == StatusAuth.preFillForm) return;
 
-    LoginState newState = resultCheckAuth.when(
+    emit(await _loginUser(email, password));
+
+    emit(await _checkUserDb());
+  }
+
+  LoginState _checkPrefillForm() {
+    final resultCheckAuth = _authRepository.checkStatusAuth();
+    return resultCheckAuth.when(
         result: (data) => state.copyWith(
               statusState: data == StatusAuth.preFillForm
                   ? StatusState.failure
@@ -28,18 +37,31 @@ class LoginCubit extends Cubit<LoginState> {
             ),
         error: (message) =>
             state.copyWith(message: message, statusState: StatusState.failure));
+  }
 
-    emit(newState);
-    if (newState.statusAuth == StatusAuth.preFillForm) return;
-
+  Future<LoginState> _loginUser(String email, String password) async {
     final result = await _authRepository.login(email, password);
 
-    newState = result.when(
+    return result.when(
       result: (data) =>
-          state.copyWith(statusState: StatusState.success, message: data),
+          state.copyWith(statusState: StatusState.loading, message: data),
       error: (message) =>
           state.copyWith(message: message, statusState: StatusState.failure),
     );
-    emit(newState);
+  }
+
+  Future<LoginState> _checkUserDb() async {
+    final result = await _authRepository.checkUserDb();
+    return result.when(
+      result: (data) => state.copyWith(
+          statusState: data == null ? StatusState.failure : StatusState.success,
+          statusAuth:
+              data == null ? StatusAuth.preFillForm : StatusAuth.loggedIn,
+          message: data == null
+              ? "You must pre-fill your personal data first"
+              : state.message),
+      error: (message) =>
+          state.copyWith(message: message, statusState: StatusState.failure),
+    );
   }
 }

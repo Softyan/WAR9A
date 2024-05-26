@@ -12,6 +12,7 @@ abstract class AuthRepository {
   Future<BaseResult<String>> login(String email, String password);
   Future<BaseResult<model.User>> insertUser(model.User user);
   BaseResult<StatusAuth> checkStatusAuth();
+  Future<BaseResult<model.User?>> checkUserDb();
   Future<void> logOut();
 }
 
@@ -124,6 +125,31 @@ class AuthRepositoryImpl implements AuthRepository {
       }
 
       return DataResult(StatusAuth.register);
+    } catch (e) {
+      return ErrorResult(e.toString());
+    }
+  }
+
+  @override
+  Future<BaseResult<model.User?>> checkUserDb() async {
+    try {
+      final session = _auth.currentSession;
+      final currentUser = _auth.currentUser;
+      if (session == null || currentUser == null) {
+        return ErrorResult('User not found');
+      }
+      final response = await _supabase
+          .from(Constants.table.user)
+          .select()
+          .eq('id', currentUser.id);
+
+      if (response.isEmpty) return DataResult(null);
+
+      final user = model.User.fromJson(response.first);
+
+      await _preferences.setString(
+          Constants.sharedPreferences.user, user.toJson());
+      return DataResult(user);
     } catch (e) {
       return ErrorResult(e.toString());
     }
