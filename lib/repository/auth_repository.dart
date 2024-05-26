@@ -125,6 +125,8 @@ class AuthRepositoryImpl implements AuthRepository {
       }
 
       return DataResult(StatusAuth.register);
+    } on AuthException catch (e) {
+      return ErrorResult(e.message);
     } catch (e) {
       return ErrorResult(e.toString());
     }
@@ -150,6 +152,10 @@ class AuthRepositoryImpl implements AuthRepository {
       await _preferences.setString(
           Constants.sharedPreferences.user, user.toJson());
       return DataResult(user);
+    } on PostgrestException catch (e) {
+      return ErrorResult(e.message);
+    } on AuthException catch (e) {
+      return ErrorResult(e.message);
     } catch (e) {
       return ErrorResult(e.toString());
     }

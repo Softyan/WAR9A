@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'fonts.gen.dart';
+import 'export_res.dart';
 
 class War9aTextstyle {
   War9aTextstyle._();
@@ -11,6 +11,17 @@ class War9aTextstyle {
       fontWeight: FontWeight.normal,
       fontSize: 14,
       color: Colors.black);
+
+  /// TextStyle(fontFamily: FontFamily.poppins, fontWeight: FontWeight.w600, fontSize: 10)
+  static TextStyle primaryW600Font10 = TextStyle(
+      fontFamily: FontFamily.poppins,
+      fontWeight: FontWeight.w600,
+      fontSize: 10,
+      color: War9aColors.primaryColor);
+
+  /// TextStyle(fontFamily: FontFamily.poppins, fontWeight: FontWeight.w700, fontSize: 18)
+  static TextStyle w700_18 =
+      normal.copyWith(fontWeight: FontWeight.w700, fontSize: 18);
 
   /// TextStyle(fontFamily: FontFamily.poppins, fontWeight: FontWeight.w600, fontSize: 30)
   static TextStyle title =

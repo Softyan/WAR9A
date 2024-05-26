@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../utils/app_route.dart';
-import '../../utils/logger.dart';
-import '../login/login_screen.dart';
+import '../../components/export_components.dart';
+import '../../di/injection.dart';
+import '../../res/export_res.dart';
+import 'cubit/home_cubit.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,13 +15,41 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late final HomeCubit _homeCubit;
+
   @override
   void initState() {
     super.initState();
+    _homeCubit = getIt<HomeCubit>();
+    _homeCubit.init();
   }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return Scaffold(
+      appBar: AppbarWidget(
+        "",
+        showBackButton: false,
+        backgroundColor: Colors.white,
+        systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: War9aColors.primaryColor,
+            statusBarIconBrightness: Brightness.light),
+      ),
+      body: BlocBuilder<HomeCubit, HomeState>(
+        bloc: _homeCubit,
+        builder: (context, state) {
+          if (state.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return ListWidget(
+            state.contents,
+            isSeparated: true,
+            padding: const EdgeInsets.only(bottom: 8),
+            itemBuilder: (context, item, index) => item,
+            separatorBuilder: (context, item, index) => const SpacerWidget(16),
+          );
+        },
+      ),
+    );
   }
 }

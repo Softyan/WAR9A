@@ -7,8 +7,8 @@ import '../../res/assets.gen.dart';
 import '../../res/war9a_colors.dart';
 import '../../utils/export_utils.dart';
 import '../form/personal_form_screen.dart';
-import '../home/home_screen.dart';
 import '../login/login_screen.dart';
+import '../main/main_screen.dart';
 import 'cubit/splash_cubit.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -53,7 +53,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> mapAuthState(StatusAuth statusAuth) {
     if (statusAuth == StatusAuth.loggedIn) {
-      return AppRoute.clearAll(const HomeScreen());
+      return AppRoute.clearAll(const MainScreen());
     }
     if (statusAuth == StatusAuth.preFillForm) {
       return AppRoute.clearAll(const PersonalFormScreen(fromSplashScreen: true,));
