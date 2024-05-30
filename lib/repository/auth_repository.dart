@@ -143,11 +143,12 @@ class AuthRepositoryImpl implements AuthRepository {
       final response = await _supabase
           .from(Constants.table.user)
           .select()
-          .eq('id', currentUser.id);
+          .eq('id', currentUser.id)
+          .maybeSingle();
 
-      if (response.isEmpty) return DataResult(null);
+      if (response == null || response.isEmpty) return DataResult(null);
 
-      final user = model.User.fromJson(response.first);
+      final user = model.User.fromJson(response);
 
       await _preferences.setString(
           Constants.sharedPreferences.user, user.toJson());

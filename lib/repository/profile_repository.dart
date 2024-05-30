@@ -38,8 +38,14 @@ class ProfileRepositoryImpl implements ProfileRepository {
       final response = await _supabase
           .from(Constants.table.user)
           .select()
-          .eq('id', currentUser.id);
-      final user = model.User.fromJson(response.first);
+          .eq('id', currentUser.id)
+          .maybeSingle();
+
+      if (response == null || response.isEmpty) {
+        return ErrorResult('User not found');
+      }
+
+      final user = model.User.fromJson(response);
       return DataResult(user);
     } on PostgrestException catch (e) {
       return ErrorResult(e.message);
