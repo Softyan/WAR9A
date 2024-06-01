@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../components/export_components.dart';
 import '../../di/injection.dart';
 import '../../res/export_res.dart';
+import '../../utils/app_context.dart';
 import 'cubit/home_cubit.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -30,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppbarWidget(
         "",
         showBackButton: false,
-        backgroundColor: Colors.white,
+        backgroundColor: context.backgroundColor,
         systemOverlayStyle: SystemUiOverlayStyle(
             statusBarColor: War9aColors.primaryColor,
             statusBarIconBrightness: Brightness.light),
@@ -39,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
         bloc: _homeCubit,
         builder: (context, state) {
           if (state.isLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const LoadingWidget();
           }
           return ListWidget(
             state.contents,

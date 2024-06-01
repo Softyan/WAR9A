@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../models/item_dashboard.dart';
 import '../../../res/export_res.dart';
 import '../../../utils/export_utils.dart';
+import '../../data_warga/data_warga_screen.dart';
 import 'item_menu.dart';
 
 class MenuDashboard extends StatelessWidget {
@@ -30,7 +31,10 @@ class MenuDashboard extends StatelessWidget {
   List<ItemDashboard> get contents => [
         ItemDashboard(
             title: "Pengajuan Surat", path: Assets.icons.pengajuanSurat.path),
-        ItemDashboard(title: "Data Warga", path: Assets.icons.dataWarga.path),
+        ItemDashboard(
+            title: "Data Warga",
+            path: Assets.icons.dataWarga.path,
+            destination: const DataWargaScreen()),
         ItemDashboard(title: "Data Surat", path: Assets.icons.dataSurat.path),
       ];
 }

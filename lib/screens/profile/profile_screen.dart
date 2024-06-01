@@ -38,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         listener: (context, state) {},
         builder: (context, state) {
           if (state.isLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const LoadingWidget();
           }
           return Column(
             crossAxisAlignment: CrossAxisAlignment.center,

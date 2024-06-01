@@ -9,6 +9,7 @@ class Button extends ElevatedButton {
   final double? width;
   final double? height;
   final double borderRadius;
+  final TextStyle? textStyle;
   Button(
     this.text, {
     super.key,
@@ -18,10 +19,12 @@ class Button extends ElevatedButton {
     this.height,
     this.borderRadius = 10,
     required super.onPressed,
+    this.textStyle,
   }) : super(
             child: Text(
               text,
-              style: const TextStyle(color: Colors.white, fontSize: 18),
+              style: textStyle ??
+                  const TextStyle(color: Colors.white, fontSize: 18),
             ),
             style: newStyle ??
                 ElevatedButton.styleFrom(

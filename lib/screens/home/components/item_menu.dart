@@ -14,7 +14,7 @@ class ItemMenu extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: War9aColors.grey2,
+        color: War9aColors.greyF2,
         borderRadius: const BorderRadius.all(Radius.circular(8)),
       ),
       child: InkWell(

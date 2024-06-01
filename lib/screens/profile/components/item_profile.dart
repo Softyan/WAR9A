@@ -17,7 +17,7 @@ class ItemProfile extends StatelessWidget {
         width: context.mediaSize.width,
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
         decoration: BoxDecoration(
-            color: War9aColors.grey.withOpacity(0.15),
+            color: War9aColors.greyE2.withOpacity(0.15),
             borderRadius: const BorderRadius.all(Radius.circular(10))),
         child: Row(
           children: [
