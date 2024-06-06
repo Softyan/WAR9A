@@ -4,5 +4,7 @@
         ".idea": true,
         "war9a.iml": true,
         ".vscode": true
-    }
+    },
+    "IDX.aI.enableInlineCompletion": true,
+    "IDX.aI.enableCodebaseIndexing": true
 }

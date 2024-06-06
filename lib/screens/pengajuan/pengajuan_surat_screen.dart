@@ -32,6 +32,7 @@ class _PengajuanSuratScreenState extends State<PengajuanSuratScreen> {
         "Pengajuan Surat",
         backgroundColor: context.backgroundColor,
         backColor: War9aColors.primaryColor,
+        scrolledUnderElevation: 0,
       ),
       body: Stack(
         children: [

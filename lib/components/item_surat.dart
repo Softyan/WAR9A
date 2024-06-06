@@ -32,16 +32,29 @@ class ItemSurat extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Pemohon : $from'),
-                    Text('Keperluan : $category'),
-                    Text(createdAt?.formatDefault ?? '-')
+                    Text(
+                      'Pemohon : $from',
+                      style: War9aTextstyle.blackW500Font13,
+                    ),
+                    Text(
+                      'Keperluan : $category',
+                      style: War9aTextstyle.blackW500Font13,
+                    ),
+                    const SpacerWidget(4),
+                    Text(
+                      createdAt?.formatDefault ?? '-',
+                      style: War9aTextstyle.blackW400Font10,
+                    )
                   ],
                 )),
             Expanded(
-                child: Button(
-              'Detail',
-              onPressed: () {},
-              height: 30,
+                child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Button(
+                'Detail',
+                onPressed: () {},
+                height: 30,
+              ),
             ))
           ],
         ),

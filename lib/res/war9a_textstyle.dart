@@ -12,6 +12,12 @@ class War9aTextstyle {
       fontSize: 14,
       color: Colors.black);
 
+  static const TextStyle blackW400Font10 = TextStyle(
+      fontFamily: FontFamily.poppins,
+      fontWeight: FontWeight.w400,
+      fontSize: 10,
+      color: Colors.black);
+
   /// TextStyle(fontFamily: FontFamily.poppins, fontWeight: FontWeight.w600, fontSize: 10)
   static TextStyle primaryW600Font10 = TextStyle(
       fontFamily: FontFamily.poppins,

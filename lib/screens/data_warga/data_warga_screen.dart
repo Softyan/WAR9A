@@ -36,6 +36,7 @@ class _DataWargaScreenState extends State<DataWargaScreen> {
         "Data Warga",
         backgroundColor: context.backgroundColor,
         backColor: War9aColors.primaryColor,
+        scrolledUnderElevation: 0,
       ),
       body: Stack(
         children: [
