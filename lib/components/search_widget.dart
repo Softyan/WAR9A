@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../../res/export_res.dart';
-import '../../../utils/export_utils.dart';
+import '../res/export_res.dart';
+import '../utils/export_utils.dart';
 
-class SearchWarga extends StatelessWidget {
-  final Function(String) onSubmitted;
-  const SearchWarga({super.key, required this.onSubmitted});
+class SearchWidget extends StatelessWidget {
+  final void Function(String query) onSubmitted;
+  const SearchWidget({super.key, required this.onSubmitted});
 
   @override
   Widget build(BuildContext context) {

@@ -8,7 +8,6 @@ import '../../repository/warga_repository.dart';
 import '../../res/export_res.dart';
 import '../../utils/export_utils.dart';
 import 'components/item_data_warga.dart';
-import 'components/search_warga.dart';
 import 'cubit/data_warga_cubit.dart';
 
 class DataWargaScreen extends StatefulWidget {
@@ -74,8 +73,8 @@ class _DataWargaScreenState extends State<DataWargaScreen> {
               }
             },
           ),
-          SearchWarga(
-            onSubmitted: (query) {
+          SearchWidget(
+            onSubmitted: (String query) {
               this.query = query;
               _dataWargaCubit.getDataWarga(search: query);
             },
