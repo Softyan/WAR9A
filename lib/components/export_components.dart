@@ -2,6 +2,7 @@ export 'appbar_widget.dart';
 export 'back_button_widget.dart';
 export 'button.dart';
 export 'dropdownfield_widget.dart';
+export 'empty_data_widget.dart';
 export 'header_widget.dart';
 export 'item_surat.dart';
 export 'list_widget.dart';

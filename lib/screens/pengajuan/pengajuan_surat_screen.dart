@@ -31,8 +31,6 @@ class _PengajuanSuratScreenState extends State<PengajuanSuratScreen> {
       appBar: AppbarWidget(
         "Pengajuan Surat",
         backgroundColor: context.backgroundColor,
-        backColor: War9aColors.primaryColor,
-        scrolledUnderElevation: 0,
       ),
       body: Stack(
         children: [
@@ -43,11 +41,8 @@ class _PengajuanSuratScreenState extends State<PengajuanSuratScreen> {
                 return const LoadingWidget();
               }
               if (state.listSurat.isEmpty) {
-                return const Center(
-                  child: Text(
-                    'Tidak ada data',
-                    style: War9aTextstyle.normal,
-                  ),
+                return EmptyDataWidget(
+                  onClick: () => _cubit.getPengajuanSurat(),
                 );
               }
               return RefreshIndicator.adaptive(
@@ -58,7 +53,12 @@ class _PengajuanSuratScreenState extends State<PengajuanSuratScreen> {
                         top: 70, bottom: 8, right: 16, left: 16),
                     itemBuilder:
                         (BuildContext context, Surat item, int index) =>
-                            ItemSurat(surat: item, index: (index + 1)),
+                            ItemSurat(
+                      surat: item,
+                      index: (index + 1),
+                      text1: 'Pemohon : ${item.from}',
+                      text2: 'Keperluan : ${item.category}',
+                    ),
                   ),
                   onRefresh: () async => _cubit.getPengajuanSurat());
             },

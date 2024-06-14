@@ -35,8 +35,6 @@ class _DataWargaScreenState extends State<DataWargaScreen> {
       appBar: AppbarWidget(
         "Data Warga",
         backgroundColor: context.backgroundColor,
-        backColor: War9aColors.primaryColor,
-        scrolledUnderElevation: 0,
       ),
       body: Stack(
         children: [
@@ -47,11 +45,8 @@ class _DataWargaScreenState extends State<DataWargaScreen> {
                 return const LoadingWidget();
               }
               if (state.users.isEmpty) {
-                return const Center(
-                  child: Text(
-                    'Tidak ada data',
-                    style: War9aTextstyle.normal,
-                  ),
+                return EmptyDataWidget(
+                  onClick: () => _dataWargaCubit.getDataWarga(search: query),
                 );
               }
               return RefreshIndicator.adaptive(

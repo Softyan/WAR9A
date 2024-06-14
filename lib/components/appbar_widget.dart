@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../res/export_res.dart';
 import 'back_button_widget.dart';
 
 typedef BackPressCallback = Function()?;
@@ -18,7 +19,7 @@ class AppbarWidget extends AppBar {
       this.backColor,
       this.showBackButton = true,
       super.systemOverlayStyle,
-      super.scrolledUnderElevation, // set 0 to remove shadow
+      super.scrolledUnderElevation = 0, // set 0 to remove shadow
       super.surfaceTintColor // for appbar color on scroll
       })
       : super(
@@ -26,7 +27,7 @@ class AppbarWidget extends AppBar {
             leading: showBackButton
                 ? BackButtonWidget(
                     onClick: onBackPressed,
-                    color: backColor,
+                    color: backColor ?? War9aColors.primaryColor,
                   )
                 : null);
 }

@@ -9,11 +9,19 @@ import 'export_components.dart';
 class ItemSurat extends StatelessWidget {
   final Surat surat;
   final int index;
-  const ItemSurat({super.key, required this.surat, required this.index});
+  final String text1;
+  final String text2;
+  final void Function()? onClick;
+  const ItemSurat(
+      {super.key,
+      required this.surat,
+      required this.index,
+      this.text1 = "Text 1",
+      this.text2 = "Text 2",
+      this.onClick});
 
   @override
   Widget build(BuildContext context) {
-    final Surat(:from, :createdAt, :category) = surat;
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Container(
@@ -33,16 +41,16 @@ class ItemSurat extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Pemohon : $from',
+                      text1,
                       style: War9aTextstyle.blackW500Font13,
                     ),
                     Text(
-                      'Keperluan : $category',
+                      text2,
                       style: War9aTextstyle.blackW500Font13,
                     ),
                     const SpacerWidget(4),
                     Text(
-                      createdAt?.formatDefault ?? '-',
+                      surat.createdAt?.formatDefault ?? '-',
                       style: War9aTextstyle.blackW400Font10,
                     )
                   ],
@@ -52,7 +60,7 @@ class ItemSurat extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 4),
               child: Button(
                 'Detail',
-                onPressed: () {},
+                onPressed: onClick,
                 height: 30,
               ),
             ))
