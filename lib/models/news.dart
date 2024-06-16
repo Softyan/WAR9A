@@ -6,6 +6,7 @@ part 'news.mapper.dart';
 class News with NewsMappable {
   final int id;
   final String title;
+  final String image;
   final List<String>? contents;
   final String createdBy;
   final DateTime? createdAt;
@@ -13,10 +14,15 @@ class News with NewsMappable {
   const News({
     this.id = 0,
     this.title = '',
+    this.image = '',
     this.contents,
     this.createdBy = '',
     this.createdAt,
   });
+
+  Map<String, dynamic> get toInsertNews =>
+      {"title": title, "image": image, "contents": contents};
+
   factory News.fromJson(dynamic json) {
     if (json is Map<String, dynamic>) return NewsMapper.fromMap(json);
     if (json is String) return NewsMapper.fromJson(json);

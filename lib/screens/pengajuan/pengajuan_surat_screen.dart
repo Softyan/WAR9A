@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../components/export_components.dart';
 import '../../di/injection.dart';
 import '../../models/surat.dart';
-import '../../res/export_res.dart';
 import '../../utils/export_utils.dart';
 import 'cubit/pengajuan_surat_cubit.dart';
 

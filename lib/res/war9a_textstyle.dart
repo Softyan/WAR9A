@@ -39,6 +39,9 @@ class War9aTextstyle {
       fontSize: 13,
       color: Colors.black);
 
+  static TextStyle textButton = normal.copyWith(
+      fontSize: 10, color: Colors.white, fontWeight: FontWeight.w500);
+
   /// TextStyle(fontFamily: FontFamily.poppins, fontWeight: FontWeight.w700, fontSize: 18)
   static TextStyle w700_18 =
       normal.copyWith(fontWeight: FontWeight.w700, fontSize: 18);

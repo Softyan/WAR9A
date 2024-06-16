@@ -15,6 +15,9 @@ class TextFieldWidget extends StatelessWidget {
   final String? initialValue;
   final AutovalidateMode? validateMode;
   final double? borderRadius;
+  final int? maxLines;
+  final TextInputAction? inputAction;
+  final bool disableValidator;
   const TextFieldWidget(this.name,
       {super.key,
       this.label,
@@ -27,7 +30,10 @@ class TextFieldWidget extends StatelessWidget {
       this.suffixIcon,
       this.initialValue,
       this.validateMode,
-      this.borderRadius});
+      this.borderRadius,
+      this.maxLines,
+      this.inputAction = TextInputAction.next,
+      this.disableValidator = false});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +43,8 @@ class TextFieldWidget extends StatelessWidget {
       initialValue: initialValue,
       textCapitalization: textCapitalization,
       keyboardType: keyboardType,
-      textInputAction: TextInputAction.next,
+      maxLines: maxLines,
+      textInputAction: inputAction,
       obscureText: isObscureText,
       style: const TextStyle(
         color: Colors.black,
@@ -51,7 +58,9 @@ class TextFieldWidget extends StatelessWidget {
         ),
         hintText: hint,
       ),
-      validator: FormBuilderValidators.compose(_getValidators(validators)),
+      validator: disableValidator
+          ? null
+          : FormBuilderValidators.compose(_getValidators(validators)),
       onChanged: onChanged,
     );
   }

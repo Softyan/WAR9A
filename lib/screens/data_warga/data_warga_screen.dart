@@ -5,7 +5,6 @@ import '../../components/export_components.dart';
 import '../../di/injection.dart';
 import '../../models/user.dart';
 import '../../repository/warga_repository.dart';
-import '../../res/export_res.dart';
 import '../../utils/export_utils.dart';
 import 'components/item_data_warga.dart';
 import 'cubit/data_warga_cubit.dart';

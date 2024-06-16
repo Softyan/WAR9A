@@ -6,7 +6,7 @@ import 'package:injectable/injectable.dart';
 import '../../../data/base_state.dart';
 import '../../../models/news.dart';
 import '../../../models/user.dart';
-import '../../../repository/home_repository.dart';
+import '../../../repository/news_repository.dart';
 import '../../../repository/profile_repository.dart';
 import '../../../res/export_res.dart';
 import '../components/card_profile.dart';
@@ -18,11 +18,11 @@ part 'home_cubit.mapper.dart';
 
 @injectable
 class HomeCubit extends Cubit<HomeState> {
-  final HomeRepository _homeRepository;
+  final NewsRepository _newsRepository;
   final ProfileRepository _profileRepository;
   final List<Widget> _contents = [];
 
-  HomeCubit(this._homeRepository, this._profileRepository)
+  HomeCubit(this._newsRepository, this._profileRepository)
       : super(const HomeState());
 
   void init() async {
@@ -43,7 +43,7 @@ class HomeCubit extends Cubit<HomeState> {
     }
     _contents.add(const MenuDashboard());
     if (news.isNotEmpty) {
-    _contents.add(NewsHome(news: news));
+      _contents.add(NewsHome(news: news));
     }
     emit(state.copyWith(contents: _contents));
   }
@@ -65,11 +65,11 @@ class HomeCubit extends Cubit<HomeState> {
   Future<void> _getNews() async {
     emit(state.copyWith(statusState: StatusState.loading));
 
-    final result = await _homeRepository.getNews();
+    final result = await _newsRepository.getNews();
 
     final newState = result.when(
-      result: (data) =>
-          state.copyWith(statusState: StatusState.idle, news: data),
+      result: (data) => state.copyWith(
+          statusState: StatusState.idle, news: data.take(5).toList()),
       error: (message) =>
           state.copyWith(message: message, statusState: StatusState.failure),
     );

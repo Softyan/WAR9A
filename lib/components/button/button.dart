@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../res/war9a_colors.dart';
+import '../../res/export_res.dart';
 
 class Button extends ElevatedButton {
   final String text;
@@ -23,15 +23,15 @@ class Button extends ElevatedButton {
   }) : super(
             child: Text(
               text,
-              style: textStyle ??
-                  const TextStyle(color: Colors.white, fontSize: 18),
+              style: textStyle ?? War9aTextstyle.textButton,
             ),
             style: newStyle ??
                 ElevatedButton.styleFrom(
                     elevation: elevation,
                     backgroundColor: War9aColors.primaryColor,
-                    fixedSize: Size(width ?? 100, height ?? 50),
+                    fixedSize: width != null && height != null
+                        ? Size(width, height)
+                        : null,
                     shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.all(Radius.circular(borderRadius)))));
+                        borderRadius: BorderRadius.circular(borderRadius))));
 }

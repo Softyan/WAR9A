@@ -5,7 +5,6 @@ import '../../components/choice_chip_widget.dart';
 import '../../components/export_components.dart';
 import '../../di/injection.dart';
 import '../../models/surat.dart';
-import '../../res/export_res.dart';
 import '../../utils/export_utils.dart';
 import 'cubit/data_surat_cubit.dart';
 
@@ -77,19 +76,7 @@ class _DataSuratScreenState extends State<DataSuratScreen> {
                         ],
                       ),
                     ),
-                    Expanded(
-                        child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle, color: War9aColors.primary),
-                      child: GestureDetector(
-                        onTap: () {},
-                        child: Icon(
-                          Icons.add,
-                          color: context.backgroundColor,
-                        ),
-                      ),
-                    ))
+                    const Expanded(child: AddButton())
                   ],
                 ),
               )

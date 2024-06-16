@@ -42,12 +42,16 @@ class _HomeScreenState extends State<HomeScreen> {
           if (state.isLoading) {
             return const LoadingWidget();
           }
-          return ListWidget(
-            state.contents,
-            isSeparated: true,
-            padding: const EdgeInsets.only(bottom: 8),
-            itemBuilder: (context, item, index) => item,
-            separatorBuilder: (context, item, index) => const SpacerWidget(16),
+          return RefreshIndicator.adaptive(
+            onRefresh: () async => _homeCubit.init(),
+            child: ListWidget(
+              state.contents,
+              isSeparated: true,
+              padding: const EdgeInsets.only(bottom: 8),
+              itemBuilder: (context, item, index) => item,
+              separatorBuilder: (context, item, index) =>
+                  const SpacerWidget(16),
+            ),
           );
         },
       ),

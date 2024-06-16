@@ -20,7 +20,7 @@ class ListWidget<T> extends StatelessWidget {
       this.isSeparated = false,
       this.separatorBuilder,
       this.shrinkWrap = false,
-      this.scrollPhysics,
+      this.scrollPhysics = const BouncingScrollPhysics(),
       this.controller,
       this.padding,
       this.isHorizontal = false,
