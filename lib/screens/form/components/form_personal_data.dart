@@ -5,15 +5,22 @@ import 'package:intl/intl.dart';
 
 import '../../../components/export_components.dart';
 import '../../../models/user.dart';
+import '../../../res/export_res.dart';
 
-class FormPersonalData extends StatelessWidget {
+class FormPersonalData extends StatefulWidget {
   final Key formKey;
   const FormPersonalData(this.formKey, {super.key});
 
   @override
+  State<FormPersonalData> createState() => _FormPersonalDataState();
+}
+
+class _FormPersonalDataState extends State<FormPersonalData> {
+  int selectedRt = 1;
+  @override
   Widget build(BuildContext context) {
     return FormBuilder(
-        key: formKey,
+        key: widget.formKey,
         child: ListWidget(
           forms,
           isSeparated: true,
@@ -42,29 +49,62 @@ class FormPersonalData extends StatelessWidget {
             FormBuilderValidators.equalLength(16)
           ],
         ),
-        Row(children: [
-          const Expanded(
-            flex: 3,
-            child: Padding(
-              padding: EdgeInsets.only(right: 8.0),
-              child: TextFieldWidget(
-                'alamat',
-                label: 'Alamat',
-                hint: 'Jln. Melati, No. 0',
-                validateMode: AutovalidateMode.onUserInteraction,
-              ),
+        const TextFieldWidget(
+          'alamat',
+          label: 'Alamat',
+          hint: 'Jln. Melati, No. 0',
+          validateMode: AutovalidateMode.onUserInteraction,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Rukun Tetangga (RT)",
+              style: War9aTextstyle.normal,
             ),
-          ),
-          Expanded(
-              child: DropdownfieldWidget<int>(
-            'rt',
-            List.generate(4, (i) => i + 1),
-            label: "RT",
-            onItemsBuilder: (rt) =>
-                DropdownMenuItem(value: rt, child: Text('RT $rt')),
-            validator: FormBuilderValidators.required(),
-          ))
-        ]),
+            FormBuilderField<int>(
+              builder: (FormFieldState<int> field) => InputDecorator(
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  errorText: field.errorText,
+                ),
+                child: Wrap(
+                  spacing: 16.0,
+                  alignment: WrapAlignment.spaceBetween,
+                  children: List.generate(4, (i) => i + 1)
+                      .map((rt) => GestureDetector(
+                            onTap: () => setState(() {
+                              selectedRt = rt;
+                              field.didChange(rt);
+                            }),
+                            child: Container(
+                              width: 70,
+                              height: 40,
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                  color: selectedRt == rt
+                                      ? War9aColors.primaryColor
+                                      : null,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                      color: War9aColors.primaryColor)),
+                              child: Text(
+                                "0$rt",
+                                style: War9aTextstyle.normal.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color:
+                                        selectedRt == rt ? Colors.white : null),
+                              ),
+                            ),
+                          ))
+                      .toList(),
+                ),
+              ),
+              name: 'rt',
+            ),
+          ],
+        ),
         FormBuilderDateTimePicker(
           name: 'birth_day',
           inputType: InputType.date,

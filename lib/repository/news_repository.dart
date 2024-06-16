@@ -30,21 +30,6 @@ class NewsRepositoryImpl implements NewsRepository {
       final response = await query.range((page - 1) * 10, page * 10).limit(10);
 
       final news = response.map((element) => News.fromJson(element)).toList();
-      // final news = List.generate(10, (i) => i + 1)
-      //     .map(
-      //       (e) => News(
-      //           id: e,
-      //           title:
-      //               "News Title $e News Title $e News Title $e News Title $e",
-      //           contents: [
-      //             "1. lorem ipsum dolor sit amet",
-      //             "2. lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet",
-      //             "3. lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet"
-      //           ],
-      //           image:
-      //               "https://plus.unsplash.com/premium_photo-1714051661316-4432704b02f8?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
-      //     )
-      //     .toList();
       return DataResult(news);
     } on PostgrestException catch (e) {
       return ErrorResult(e.message);
