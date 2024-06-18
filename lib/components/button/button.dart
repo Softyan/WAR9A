@@ -10,16 +10,18 @@ class Button extends ElevatedButton {
   final double? height;
   final double borderRadius;
   final TextStyle? textStyle;
+  final Color? backgroundColor;
   Button(
     this.text, {
     super.key,
     this.newStyle,
     this.elevation,
     this.width,
-    this.height,
+    this.height = 50,
     this.borderRadius = 10,
     required super.onPressed,
     this.textStyle,
+    this.backgroundColor,
   }) : super(
             child: Text(
               text,
@@ -28,7 +30,8 @@ class Button extends ElevatedButton {
             style: newStyle ??
                 ElevatedButton.styleFrom(
                     elevation: elevation,
-                    backgroundColor: War9aColors.primaryColor,
+                    backgroundColor:
+                        backgroundColor ?? War9aColors.primaryColor,
                     fixedSize: width != null && height != null
                         ? Size(width, height)
                         : null,

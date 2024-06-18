@@ -8,6 +8,7 @@ import '../utils/export_utils.dart';
 
 abstract class ProfileRepository {
   Future<BaseResult<model.User>> getCurrentUser();
+  Future<BaseResult<void>> logOut();
 }
 
 @Injectable(as: ProfileRepository)
@@ -49,6 +50,19 @@ class ProfileRepositoryImpl implements ProfileRepository {
       return DataResult(user);
     } on PostgrestException catch (e) {
       return ErrorResult(e.message);
+    } on AuthException catch (e) {
+      return ErrorResult(e.message);
+    } catch (e) {
+      return ErrorResult(e.toString());
+    }
+  }
+
+  @override
+  Future<BaseResult<void>> logOut() async {
+    try {
+      final response = await _auth.signOut();
+      _preferences.clear();
+      return DataResult(response);
     } on AuthException catch (e) {
       return ErrorResult(e.message);
     } catch (e) {

@@ -9,6 +9,7 @@ class War9aColors {
   static Color greyE2 = HexColor('#E2E2E2');
   static Color greyF2 = HexColor('#F2F2F2');
   static Color greyF5 = HexColor('#F5F5F5');
+  static Color red = HexColor('#FF2D2D');
   
   static MaterialColor primary = MaterialColor(
     primaryColor.value,

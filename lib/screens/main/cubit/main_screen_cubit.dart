@@ -25,16 +25,18 @@ class MainScreenCubit extends Cubit<MainScreenState> {
       final session = event.session;
       logger.i("Session: ${session != null}");
 
-      if (session == null) {
-        emit(state.copyWith(
-            statusAuth: StatusAuth.register,
-            message: "Your session has expired"));
-      }
-
       if (event.event == AuthChangeEvent.signedOut) {
         emit(state.copyWith(
             statusAuth: StatusAuth.register,
             message: "You have been logged out"));
+        return;
+      }
+
+      if (session == null) {
+        emit(state.copyWith(
+            statusAuth: StatusAuth.register,
+            message: "Your session has expired"));
+        return;
       }
     });
   }

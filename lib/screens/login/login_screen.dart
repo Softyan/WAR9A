@@ -11,7 +11,7 @@ import '../../repository/auth_repository.dart';
 import '../../res/export_res.dart';
 import '../../utils/export_utils.dart';
 import '../form/personal_form_screen.dart';
-import '../home/home_screen.dart';
+import '../main/main_screen.dart';
 import '../register/register_screen.dart';
 import 'components/form_login.dart';
 import 'cubit/login_cubit.dart';
@@ -50,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
           if (state.isSuccess) {
             context.snackbar.showSnackBar(
                 SnackbarWidget(state.message, state: SnackbarState.success));
-            AppRoute.clearAll(const HomeScreen());
+            AppRoute.clearAll(const MainScreen());
           }
           if (state.isError) {
             context.snackbar.showSnackBar(

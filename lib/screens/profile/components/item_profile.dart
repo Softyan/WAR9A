@@ -15,7 +15,7 @@ class ItemProfile extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Container(
         width: context.mediaSize.width,
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+        padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
             color: War9aColors.greyE2.withOpacity(0.15),
             borderRadius: const BorderRadius.all(Radius.circular(10))),
@@ -23,7 +23,7 @@ class ItemProfile extends StatelessWidget {
           children: [
             Expanded(
                 child: path != null
-                    ? AssetGenImage(path).image()
+                    ? SvgGenImage(path).svg()
                     : const Icon(Icons.abc)),
             Expanded(
               flex: 5,

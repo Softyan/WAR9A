@@ -37,6 +37,7 @@ class FormLogin extends StatelessWidget {
                 label: 'Password',
                 validateMode: AutovalidateMode.onUserInteraction,
                 isObscureText: isHiddenPassword,
+                maxLines: 1,
                 suffixIcon: IconButton(
                     onPressed: onViewPassword,
                     icon: Icon(isHiddenPassword

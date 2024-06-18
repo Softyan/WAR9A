@@ -71,7 +71,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void dispose() async {
-    await _cubit.close();
     super.dispose();
+    await _cubit.close();
   }
 }

@@ -43,6 +43,7 @@ class _FormRegisterState extends State<FormRegister> {
               label: 'Password',
               validateMode: AutovalidateMode.onUserInteraction,
               isObscureText: isHiddenPassword,
+              maxLines: 1,
               suffixIcon: IconButton(
                   onPressed: () {
                     setState(() {
@@ -70,6 +71,7 @@ class _FormRegisterState extends State<FormRegister> {
               'confirm_password',
               label: 'Confirm Password',
               validateMode: AutovalidateMode.onUserInteraction,
+              maxLines: 1,
               isObscureText: isHiddenConfirmPassword,
               suffixIcon: IconButton(
                   onPressed: () {
