@@ -11,7 +11,8 @@ import 'components/item_profile.dart';
 import 'cubit/profile_cubit.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  final User? user;
+  const ProfileScreen({super.key, this.user});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -19,19 +20,22 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   late final ProfileCubit _cubit;
+  bool isDataWarga = false;
 
   @override
   void initState() {
     super.initState();
     _cubit = getIt<ProfileCubit>();
-    _cubit.getUser();
+    final user = widget.user;
+    isDataWarga = user != null;
+    _cubit.getUser(user: user);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppbarWidget(
-        "Profile",
+        isDataWarga ? "Detail Data Warga" : "Profile",
         showBackButton: false,
         backgroundColor: context.backgroundColor,
       ),
@@ -67,8 +71,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
         Button(
-          "LogOut",
-          onPressed: logout,
+          isDataWarga ? "Hapus Data" : "LogOut",
+          onPressed: () async => isDataWarga
+              ? _cubit.hapusDataWarga(_cubit.state.user)
+              : _cubit.logOut,
           width: context.mediaSize.width,
           backgroundColor: War9aColors.red,
           textStyle: War9aTextstyle.blackW600Font16
@@ -94,9 +100,5 @@ class _ProfileScreenState extends State<ProfileScreen> {
           content: "0$rt",
           path: Assets.icons.icRt.path),
     ];
-  }
-
-  void logout() {
-    _cubit.logOut();
   }
 }

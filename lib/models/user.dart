@@ -15,20 +15,21 @@ class User with UserMappable {
   final DateTime? birthDay;
   final String nik;
   final int rt;
+  final bool isActiveWarga;
 
-  const User({
-    this.id = '',
-    this.email = '',
-    this.password,
-    this.name = '',
-    this.alamat = '',
-    this.jenisKelamin,
-    this.role = Role.warga,
-    this.createdAt,
-    this.birthDay,
-    this.nik = '',
-    this.rt = 0,
-  });
+  const User(
+      {this.id = '',
+      this.email = '',
+      this.password,
+      this.name = '',
+      this.alamat = '',
+      this.jenisKelamin,
+      this.role = Role.warga,
+      this.createdAt,
+      this.birthDay,
+      this.nik = '',
+      this.rt = 0,
+      this.isActiveWarga = false});
 
   factory User.fromJson(dynamic json) {
     if (json is Map<String, dynamic>) return UserMapper.fromMap(json);
@@ -53,5 +54,7 @@ enum Role {
   @MappableValue('RW')
   rw,
   @MappableValue('Warga')
-  warga
+  warga,
+  @MappableValue('Sekretaris')
+  sekretaris
 }

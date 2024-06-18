@@ -6,8 +6,11 @@ import '../data/data_result.dart';
 import '../models/user.dart' as model;
 import '../utils/export_utils.dart';
 
+typedef Body = Map<String, dynamic>;
+
 abstract class ProfileRepository {
   Future<BaseResult<model.User>> getCurrentUser();
+  Future<BaseResult<User>> updateWarga(String id, {Body? data});
   Future<BaseResult<void>> logOut();
 }
 
@@ -64,6 +67,35 @@ class ProfileRepositoryImpl implements ProfileRepository {
       _preferences.clear();
       return DataResult(response);
     } on AuthException catch (e) {
+      return ErrorResult(e.message);
+    } catch (e) {
+      return ErrorResult(e.toString());
+    }
+  }
+
+  @override
+  Future<BaseResult<User>> updateWarga(String id,
+      {Map<String, dynamic>? data}) async {
+    const idKey = "id";
+
+    if (data == null) {
+      return ErrorResult("Updated data cant be empty");
+    }
+
+    try {
+      final response = await _supabase
+          .from(Constants.table.user)
+          .update(data)
+          .eq(idKey, id)
+          .single();
+
+      final newUser = User.fromJson(response);
+
+      if (newUser == null) {
+        return ErrorResult("User not found");
+      }
+      return DataResult(newUser);
+    } on PostgrestException catch (e) {
       return ErrorResult(e.message);
     } catch (e) {
       return ErrorResult(e.toString());

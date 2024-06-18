@@ -35,44 +35,46 @@ class _DataWargaScreenState extends State<DataWargaScreen> {
         "Data Warga",
         backgroundColor: context.backgroundColor,
       ),
-      body: Stack(
+      body: Column(
         children: [
-          BlocConsumer<DataWargaCubit, DataWargaState>(
-            bloc: _dataWargaCubit,
-            builder: (context, state) {
-              if (state.isLoading) {
-                return const LoadingWidget();
-              }
-              if (state.users.isEmpty) {
-                return EmptyDataWidget(
-                  onClick: () => _dataWargaCubit.getDataWarga(search: query),
-                );
-              }
-              return RefreshIndicator.adaptive(
-                onRefresh: () async =>
-                    _dataWargaCubit.getDataWarga(search: query),
-                child: ListWidget(
-                  state.users,
-                  scrollPhysics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.only(
-                      top: 70, bottom: 8, right: 16, left: 16),
-                  itemBuilder: (BuildContext context, User item, int index) =>
-                      ItemDataWarga(user: item, index: (index + 1)),
-                ),
-              );
-            },
-            listener: (context, state) {
-              if (state.isError) {
-                context.snackbar.showSnackBar(
-                    SnackbarWidget(state.message, state: SnackbarState.error));
-              }
-            },
-          ),
           SearchWidget(
             onSubmitted: (String query) {
               this.query = query;
               _dataWargaCubit.getDataWarga(search: query);
             },
+          ),
+          Expanded(
+            child: BlocConsumer<DataWargaCubit, DataWargaState>(
+              bloc: _dataWargaCubit,
+              builder: (context, state) {
+                if (state.isLoading) {
+                  return const LoadingWidget();
+                }
+                if (state.users.isEmpty) {
+                  return EmptyDataWidget(
+                    onClick: () => _dataWargaCubit.getDataWarga(search: query),
+                  );
+                }
+                return RefreshIndicator.adaptive(
+                  onRefresh: () async =>
+                      _dataWargaCubit.getDataWarga(search: query),
+                  child: ListWidget(
+                    state.users,
+                    scrollPhysics: const AlwaysScrollableScrollPhysics(),
+                    padding:
+                        const EdgeInsets.only(bottom: 8, right: 16, left: 16),
+                    itemBuilder: (BuildContext context, User item, int index) =>
+                        ItemDataWarga(user: item, index: (index + 1)),
+                  ),
+                );
+              },
+              listener: (context, state) {
+                if (state.isError) {
+                  context.snackbar.showSnackBar(SnackbarWidget(state.message,
+                      state: SnackbarState.error));
+                }
+              },
+            ),
           ),
         ],
       ),

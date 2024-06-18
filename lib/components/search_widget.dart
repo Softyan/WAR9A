@@ -5,16 +5,16 @@ import '../utils/export_utils.dart';
 
 class SearchWidget extends StatelessWidget {
   final void Function(String query) onSubmitted;
-  const SearchWidget({super.key, required this.onSubmitted});
+  final double? height;
+  const SearchWidget({super.key, required this.onSubmitted, this.height});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: context.backgroundColor,
       padding: const EdgeInsets.all(16),
+      height: height ?? 75,
       child: Container(
         width: context.mediaSize.width,
-        height: 50,
         decoration: BoxDecoration(
             color: War9aColors.greyF5, borderRadius: BorderRadius.circular(10)),
         child: TextField(

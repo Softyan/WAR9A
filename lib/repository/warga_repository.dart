@@ -33,8 +33,10 @@ class WargaRepositoryImpl implements WargaRepository {
       var query = _supabase.from(Constants.table.user).select().neq('id', id);
 
       if (search != null && search.isNotEmpty && search.length > 3) {
-        query =
-            query.textSearch('name', search, type: client.TextSearchType.plain);
+        query = query.ilike(
+          search.isDigitOnly ? 'nik' : 'name',
+          '%$search%',
+        );
       }
 
       final response = await query.range((page - 1) * 10, page * 10).limit(10);
