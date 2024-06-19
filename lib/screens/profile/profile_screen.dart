@@ -72,9 +72,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         Button(
           isDataWarga ? "Hapus Data" : "LogOut",
-          onPressed: () async => isDataWarga
+          onPressed: () => isDataWarga
               ? _cubit.hapusDataWarga(_cubit.state.user)
-              : _cubit.logOut,
+              : _cubit.logOut(),
           width: context.mediaSize.width,
           backgroundColor: War9aColors.red,
           textStyle: War9aTextstyle.blackW600Font16
