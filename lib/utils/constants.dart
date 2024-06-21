@@ -3,7 +3,8 @@ class Constants {
 
   static const appName = "War9a";
   static const TableConstants table = TableConstants();
-  static const SharedPreferencesConstants sharedPreferences = SharedPreferencesConstants();
+  static const SharedPreferencesConstants sharedPreferences =
+      SharedPreferencesConstants();
 }
 
 class TableConstants {
@@ -12,6 +13,7 @@ class TableConstants {
   final String news = "news";
   final String surat = "surat";
   final String stepsSurat = "step_surat";
+  final String notification = "notification";
 }
 
 class SharedPreferencesConstants {

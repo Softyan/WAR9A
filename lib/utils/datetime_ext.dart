@@ -11,4 +11,10 @@ extension DateTimeExt on DateTime {
   /// dd MMMM yyyy hh:mm (01 January 2024 00:00)
   String get formatDefault =>
       DateFormat('dd MMMM yyyy HH:mm', 'id_ID').format(toLocal());
+
+
+  /// Format date with default pattern
+  /// dd MMMM yyyy (01 January 2024)
+  String get formatWithoutTime =>
+      DateFormat('dd MMMM yyyy', 'id_ID').format(toLocal());
 }
