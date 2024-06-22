@@ -19,13 +19,13 @@ class ItemNotification extends StatelessWidget {
       width: context.mediaSize.width,
       padding: const EdgeInsets.only(bottom: 8),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(10),
         child: InkWell(
           onTap: isRead == false ? onClick : null,
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(10),
           child: Ink(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(10),
               border: Border.all(color: War9aColors.greyC4.withOpacity(0.15)),
               color: isRead
                   ? Colors.white.withOpacity(0.20)
