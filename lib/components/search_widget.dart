@@ -6,12 +6,14 @@ import '../utils/export_utils.dart';
 class SearchWidget extends StatelessWidget {
   final void Function(String query) onSubmitted;
   final double? height;
-  const SearchWidget({super.key, required this.onSubmitted, this.height});
+  final EdgeInsetsGeometry? padding;
+  const SearchWidget(
+      {super.key, required this.onSubmitted, this.height, this.padding});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: padding ?? const EdgeInsets.all(16),
       height: height ?? 75,
       child: Container(
         width: context.mediaSize.width,

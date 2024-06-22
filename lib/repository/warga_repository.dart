@@ -3,11 +3,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as client;
 
 import '../data/data_result.dart';
+import '../models/filter_warga.dart';
 import '../models/user.dart';
 import '../utils/export_utils.dart';
 
 abstract class WargaRepository {
-  Future<BaseResult<List<User>>> getDataWarga(String? search, {int page});
+  Future<BaseResult<List<User>>> getDataWarga(
+      String? search, FilterWarga? filter,
+      {int page});
 }
 
 @Injectable(as: WargaRepository)
@@ -17,7 +20,8 @@ class WargaRepositoryImpl implements WargaRepository {
   WargaRepositoryImpl(this._supabase, this._preferences);
 
   @override
-  Future<BaseResult<List<User>>> getDataWarga(String? search,
+  Future<BaseResult<List<User>>> getDataWarga(
+      String? search, FilterWarga? filter,
       {int page = 1}) async {
     if (search != null && search.length <= 3) {
       return ErrorResult("Masukkan pencarian lebih dari 3 huruf");
@@ -30,8 +34,10 @@ class WargaRepositoryImpl implements WargaRepository {
       }
       final User(:id) = User.fromJson(savedUser);
 
+      /// Base query
       var query = _supabase.from(Constants.table.user).select().neq('id', id);
 
+      /// Search with name or nik
       if (search != null && search.isNotEmpty && search.length > 3) {
         query = query.ilike(
           search.isDigitOnly ? 'nik' : 'name',
@@ -39,8 +45,17 @@ class WargaRepositoryImpl implements WargaRepository {
         );
       }
 
+      /// Filter
+      if (filter != null) {
+        final FilterWarga(:rt, :isStay) = filter;
+        if (rt != null) query = query.eq('rt', rt);
+        if (isStay != null) query = query.eq('is_stay', isStay);
+      }
+
+      /// Pagination
       final response = await query.range((page - 1) * 10, page * 10).limit(10);
 
+      /// Mapping & response
       final users = response.map((element) => User.fromJson(element)).toList();
 
       return DataResult(users);

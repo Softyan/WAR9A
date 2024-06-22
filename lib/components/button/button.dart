@@ -11,17 +11,19 @@ class Button extends ElevatedButton {
   final double borderRadius;
   final TextStyle? textStyle;
   final Color? backgroundColor;
+  final BorderSide? borderStyle;
   Button(
-    this.text, {
+    this.text,{
     super.key,
     this.newStyle,
     this.elevation,
     this.width,
-    this.height = 50,
+    this.height,
     this.borderRadius = 10,
     required super.onPressed,
     this.textStyle,
     this.backgroundColor,
+    this.borderStyle
   }) : super(
             child: Text(
               text,
@@ -32,9 +34,8 @@ class Button extends ElevatedButton {
                     elevation: elevation,
                     backgroundColor:
                         backgroundColor ?? War9aColors.primaryColor,
-                    fixedSize: width != null && height != null
-                        ? Size(width, height)
-                        : null,
+                    fixedSize: width != null ? Size(width, height ?? 50) : null,
                     shape: RoundedRectangleBorder(
+                        side: borderStyle ?? BorderSide.none,
                         borderRadius: BorderRadius.circular(borderRadius))));
 }
