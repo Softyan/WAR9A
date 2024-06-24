@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../components/export_components.dart';
 import '../../di/injection.dart';
 import '../../models/surat.dart';
+import '../../res/war9a_colors.dart';
 import '../../utils/export_utils.dart';
 import 'cubit/pengajuan_surat_cubit.dart';
 
@@ -55,8 +56,7 @@ class _PengajuanSuratScreenState extends State<PengajuanSuratScreen> {
                             ItemSurat(
                       surat: item,
                       index: (index + 1),
-                      text1: 'Pemohon : ${item.from}',
-                      text2: 'Keperluan : ${item.category}',
+                      fromDataSurat: false,
                     ),
                   ),
                   onRefresh: () async => _cubit.getPengajuanSurat());
@@ -66,6 +66,11 @@ class _PengajuanSuratScreenState extends State<PengajuanSuratScreen> {
             onSubmitted: (String query) {},
           )
         ],
+      ),
+      floatingActionButton: FloatingActionButton.small(
+        onPressed: () {},
+        backgroundColor: War9aColors.primary,
+        child: Icon(Icons.add, color: context.backgroundColor),
       ),
     );
   }

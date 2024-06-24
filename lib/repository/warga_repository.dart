@@ -40,7 +40,7 @@ class WargaRepositoryImpl implements WargaRepository {
       /// Search with name or nik
       if (search != null && search.isNotEmpty && search.length > 3) {
         query = query.ilike(
-          search.isDigitOnly ? 'nik' : 'name',
+          search.isDigitOnly() ? 'nik' : 'name',
           '%$search%',
         );
       }

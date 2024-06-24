@@ -109,12 +109,9 @@ class _DataSuratScreenState extends State<DataSuratScreen> {
                             horizontal: 16, vertical: 8),
                         itemBuilder:
                             (BuildContext context, Surat item, int index) {
-                      final Surat(:from, :noSurat) = item;
                       return ItemSurat(
                         surat: item,
                         index: (index + 1),
-                        text1: "Asal Surat : $from",
-                        text2: "Nomor Surat : $noSurat",
                       );
                     }),
                   );
