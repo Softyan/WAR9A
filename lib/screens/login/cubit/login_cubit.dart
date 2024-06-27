@@ -18,9 +18,11 @@ class LoginCubit extends Cubit<LoginState> {
 
     LoginState newState = _checkPrefillForm();
     emit(newState);
-    if (newState.statusAuth == StatusAuth.preFillForm) return;
+    if (newState.statusState != StatusState.loading) return;
 
-    emit(await _loginUser(email, password));
+    final resultLogin = await _loginUser(email, password);
+    emit(resultLogin);
+    if (resultLogin.isError) return;
 
     emit(await _checkUserDb());
   }

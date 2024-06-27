@@ -16,6 +16,7 @@ class LoadingDialog {
   }
 
   void showLoading(BuildContext context, {bool dismissable = false}) {
+    if (isShown) return;
     isShown = true;
     showDialog(
         context: context,
