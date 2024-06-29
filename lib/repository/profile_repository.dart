@@ -10,7 +10,7 @@ typedef Body = Map<String, dynamic>;
 
 abstract class ProfileRepository {
   Future<BaseResult<model.User>> getCurrentUser();
-  Future<BaseResult<User>> updateWarga(String id, {Body? data});
+  Future<BaseResult<model.User>> updateWarga(String id, {Body? data});
   Future<BaseResult<void>> logOut();
 }
 
@@ -74,7 +74,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
   }
 
   @override
-  Future<BaseResult<User>> updateWarga(String id,
+  Future<BaseResult<model.User>> updateWarga(String id,
       {Map<String, dynamic>? data}) async {
     const idKey = "id";
 
@@ -82,23 +82,31 @@ class ProfileRepositoryImpl implements ProfileRepository {
       return ErrorResult("Updated data cant be empty");
     }
 
+    logger.d("Update Warga $id => $data");
+
     try {
       final response = await _supabase
           .from(Constants.table.user)
           .update(data)
           .eq(idKey, id)
-          .single();
+          .select();
 
-      final newUser = User.fromJson(response);
+      logger.d(response);
 
-      if (newUser == null) {
+      if (response.isEmpty) {
         return ErrorResult("User not found");
       }
+
+      final newUser = model.User.fromJson(response.first);
+      logger.d("Update Warga => $newUser");
+
       return DataResult(newUser);
     } on PostgrestException catch (e) {
+      logger.e(e.message);
       return ErrorResult(e.message);
     } catch (e) {
-      return ErrorResult(e.toString());
+      logger.e("Error Update Warga => $e");
+      return ErrorResult("Error can't update user");
     }
   }
 }

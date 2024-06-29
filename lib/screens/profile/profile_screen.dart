@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../components/export_components.dart';
 import '../../di/injection.dart';
+import '../../models/enums/profile_type.dart';
 import '../../models/item_data_profile.dart';
 import '../../models/user.dart';
 import '../../res/export_res.dart';
@@ -20,14 +21,14 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   late final ProfileCubit _cubit;
-  bool isDataWarga = false;
+  bool isForProfile = true;
 
   @override
   void initState() {
     super.initState();
     _cubit = getIt<ProfileCubit>();
     final user = widget.user;
-    isDataWarga = user != null;
+    isForProfile = user == null;
     _cubit.getUser(user: user);
   }
 
@@ -35,12 +36,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppbarWidget(
-        isDataWarga ? "Detail Data Warga" : "Profile",
+        isForProfile ? "Profile" : "Detail Data Warga",
         showBackButton: false,
         backgroundColor: context.backgroundColor,
       ),
-      body: BlocBuilder<ProfileCubit, ProfileState>(
+      body: BlocConsumer<ProfileCubit, ProfileState>(
         bloc: _cubit,
+        listener: (context, state) {
+          if (state.isSuccess) {
+            context.snackbar.showSnackBar(
+                SnackbarWidget(state.message, state: SnackbarState.success));
+          }
+          if (state.isError) {
+            context.snackbar.showSnackBar(
+                SnackbarWidget(state.message, state: SnackbarState.error));
+          }
+        },
         builder: (context, state) {
           if (state.isLoading) {
             return const LoadingWidget();
@@ -70,16 +81,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
             dataProfile: item,
           ),
         ),
-        Button(
-          isDataWarga ? "Hapus Data" : "LogOut",
-          onPressed: () => isDataWarga
-              ? _cubit.hapusDataWarga(_cubit.state.user)
-              : _cubit.logOut(),
-          width: context.mediaSize.width,
-          backgroundColor: War9aColors.red,
-          textStyle: War9aTextstyle.blackW600Font16
-              .copyWith(fontSize: 18, color: Colors.white),
-        )
+        BlocSelector<ProfileCubit, ProfileState, ProfileType>(
+            bloc: _cubit,
+            selector: (state) => state.profileType,
+            builder: (context, state) => Button(
+                  _titleButton(state),
+                  onPressed: () => isForProfile
+                      ? _cubit.logOut()
+                      : _cubit.changeStatusDataWarga(_cubit.state.user),
+                  width: context.mediaSize.width,
+                  backgroundColor: state == ProfileType.active
+                      ? War9aColors.green
+                      : War9aColors.red,
+                  textStyle: War9aTextstyle.blackW600Font16
+                      .copyWith(fontSize: 18, color: Colors.white),
+                ))
       ];
 
   List<ItemDataProfile> _dataProfile(User user) {
@@ -101,4 +117,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           path: Assets.icons.icRt.path),
     ];
   }
+
+  String _titleButton(ProfileType profileType) => switch (profileType) {
+        ProfileType.active => "Aktifkan",
+        ProfileType.deactive => "Deaktifkan",
+        ProfileType.logOut => "LogOut",
+      };
 }

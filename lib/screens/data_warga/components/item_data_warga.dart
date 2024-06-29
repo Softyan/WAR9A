@@ -13,7 +13,7 @@ class ItemDataWarga extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final User(:name, :rt, :birthDate) = user;
+    final User(:name, :rt, :nik) = user;
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: InkWell(
@@ -29,24 +29,45 @@ class ItemDataWarga extends StatelessWidget {
                   ? War9aColors.primaryColor.withOpacity(0.22)
                   : War9aColors.greyE2.withOpacity(0.15),
               borderRadius: BorderRadius.circular(10)),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
             children: [
-              Text(
-                "Nama : $name",
-                style: War9aTextstyle.normal,
+              Expanded(
+                flex: 4,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      nik.ifEmpty(),
+                      style: War9aTextstyle.normal,
+                      maxLines: 1,
+                    ),
+                    Text(
+                      name.ifEmpty() * 5,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style:
+                          War9aTextstyle.blackW600Font16.copyWith(fontSize: 20),
+                    ),
+                    const SpacerWidget(8),
+                  ],
+                ),
               ),
-              Text(
-                "Rukun Tetangga : $rt",
-                style: War9aTextstyle.normal,
-              ),
-              const SpacerWidget(8),
-              Text(
-                birthDate?.formattedDate(pattern: 'dd MMMM yyyy') ?? '-',
-                style: War9aTextstyle.normal
-                    .copyWith(fontWeight: FontWeight.w400, fontSize: 10),
-              ),
+              Expanded(
+                child: Column(
+                  children: [
+                    const Text(
+                      "RT",
+                      style: War9aTextstyle.normal,
+                    ),
+                    Text(
+                      "0$rt",
+                      style:
+                          War9aTextstyle.blackW600Font16.copyWith(fontSize: 20),
+                    ),
+                  ],
+                ),
+              )
             ],
           ),
         ),
