@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
 
-import '../models/surat.dart';
-import '../res/export_res.dart';
-import '../utils/export_utils.dart';
+import '../../models/surat.dart';
+import '../../res/export_res.dart';
+import '../../utils/export_utils.dart';
 
 class ItemSurat extends StatelessWidget {
   final Surat surat;
   final int index;
-  final bool fromDataSurat;
   final void Function()? onClick;
-  const ItemSurat(
-      {super.key,
-      required this.surat,
-      required this.index,
-      this.onClick,
-      this.fromDataSurat = true});
+  const ItemSurat({
+    super.key,
+    required this.surat,
+    required this.index,
+    this.onClick,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final Surat(:from, :noSurat, :createdAt, :keperluan) = surat;
+    final Surat(:from, :noSurat, :createdAt) = surat;
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Container(
@@ -34,7 +33,7 @@ class ItemSurat extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              fromDataSurat ? "Asal Surat" : "Pemohon",
+              "Asal Surat",
               style: War9aTextstyle.normal.copyWith(fontSize: 8),
             ),
             Text(
@@ -44,7 +43,7 @@ class ItemSurat extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             Text(
-              fromDataSurat ? "Nomor Surat" : "Keperluan",
+              "Nomor Surat",
               style: War9aTextstyle.normal.copyWith(fontSize: 8),
             ),
             Row(
@@ -53,7 +52,7 @@ class ItemSurat extends StatelessWidget {
                 Expanded(
                   flex: 2,
                   child: Text(
-                    fromDataSurat ? noSurat : keperluan,
+                    noSurat,
                     style: War9aTextstyle.normal.copyWith(fontSize: 14),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

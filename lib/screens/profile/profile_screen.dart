@@ -83,7 +83,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ];
 
   List<ItemDataProfile> _dataProfile(User user) {
-    final User(:name, :nik, :alamat, :rt, :birthDay) = user;
+    final User(:name, :nik, :alamat, :rt, :birthDate) = user;
     return [
       ItemDataProfile(
           title: "Nama", content: name, path: Assets.icons.icNama.path),
@@ -93,7 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           title: "Alamat", content: alamat, path: Assets.icons.icAlamat.path),
       ItemDataProfile(
           title: "Tanggal Lahir",
-          content: birthDay?.formattedDate(pattern: 'dd MMMM yyyy') ?? '-',
+          content: birthDate?.formattedDate(pattern: 'dd MMMM yyyy') ?? '-',
           path: Assets.icons.icBirthday.path),
       ItemDataProfile(
           title: "Rukun Tetangga",

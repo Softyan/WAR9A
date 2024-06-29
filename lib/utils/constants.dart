@@ -14,6 +14,7 @@ class TableConstants {
   final String surat = "surat";
   final String stepsSurat = "step_surat";
   final String notification = "notification";
+  final String pengajuaSurat = "pengajuan_surat";
 }
 
 class SharedPreferencesConstants {

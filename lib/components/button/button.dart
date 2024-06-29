@@ -34,7 +34,7 @@ class Button extends ElevatedButton {
                     elevation: elevation,
                     backgroundColor:
                         backgroundColor ?? War9aColors.primaryColor,
-                    fixedSize: width != null ? Size(width, height ?? 50) : null,
+                    fixedSize: width != null || height != null ? Size(width ?? 100, height ?? 50) : null,
                     shape: RoundedRectangleBorder(
                         side: borderStyle ?? BorderSide.none,
                         borderRadius: BorderRadius.circular(borderRadius))));

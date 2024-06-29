@@ -13,7 +13,7 @@ class ItemDataWarga extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final User(:name, :rt, :birthDay) = user;
+    final User(:name, :rt, :birthDate) = user;
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: InkWell(
@@ -43,7 +43,7 @@ class ItemDataWarga extends StatelessWidget {
               ),
               const SpacerWidget(8),
               Text(
-                birthDay?.formattedDate(pattern: 'dd MMMM yyyy') ?? '-',
+                birthDate?.formattedDate(pattern: 'dd MMMM yyyy') ?? '-',
                 style: War9aTextstyle.normal
                     .copyWith(fontWeight: FontWeight.w400, fontSize: 10),
               ),

@@ -7,9 +7,11 @@ class AppRoute {
   static NavigatorState get navigator => navigatorKey.currentState!;
 
   static Future to(
-    Widget route,
-  ) {
-    return navigator.push(CupertinoPageRoute(builder: (context) => route));
+    Widget route, {
+    RouteSettings? settings,
+  }) {
+    return navigator.push(
+        CupertinoPageRoute(builder: (context) => route, settings: settings));
   }
 
   static Future clearTopTo(
@@ -24,6 +26,10 @@ class AppRoute {
   ) {
     return navigator.pushAndRemoveUntil(
         CupertinoPageRoute(builder: (context) => route), (route) => false);
+  }
+
+  static void popUntil(String title) {
+    return navigator.popUntil(ModalRoute.withName(title));
   }
 
   static void back<T extends Object?>([

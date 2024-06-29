@@ -8,6 +8,8 @@ import '../utils/export_utils.dart';
 import 'shared_preference_repository.dart';
 
 abstract class NotificationRepository {
+  Future<BaseResult<Notification>> createNotification(
+      Notification notification);
   Future<BaseResult<List<Notification>>> getListNotification({int page});
   Future<BaseResult<List<Notification>>> readAllNotification({int page});
   Future<BaseResult<void>> readNotification(String notificationId);
@@ -23,6 +25,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
   static const String idKey = "id";
   static const String createdAtKey = "created_at";
   static const String isReadKey = "is_read";
+  final String notificationTable = Constants.table.notification;
 
   @override
   Future<BaseResult<List<Notification>>> getListNotification(
@@ -38,7 +41,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
 
       /// getting list notification
       final response = await _supabase
-          .from(Constants.table.notification)
+          .from(notificationTable)
           .select()
           .eq(toKey, userId)
           .order(isReadKey, ascending: true)
@@ -70,7 +73,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
 
       /// getting list notification again after read all updated
       final response = await _supabase
-          .from(Constants.table.notification)
+          .from(notificationTable)
           .update({isReadKey: true})
           .eq(toKey, userId)
           .select()
@@ -97,7 +100,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
       if (notificationId.isEmpty) return ErrorResult("NotificationId is Empty");
 
       final response = await _supabase
-          .from(Constants.table.notification)
+          .from(notificationTable)
           .update({isReadKey: true})
           .eq(idKey, notificationId)
           .select();
@@ -105,6 +108,23 @@ class NotificationRepositoryImpl implements NotificationRepository {
       if (response.isEmpty) return ErrorResult("Notification not found");
 
       return DataResult(null);
+    } on client.PostgrestException catch (e) {
+      return ErrorResult(e.message);
+    } catch (e) {
+      return ErrorResult(e.toString());
+    }
+  }
+
+  @override
+  Future<BaseResult<Notification>> createNotification(
+      Notification notification) async {
+    try {
+      final response = await _supabase
+          .from(notificationTable)
+          .insert(notification.insertNotif)
+          .select()
+          .single();
+      return DataResult(Notification.fromJson(response));
     } on client.PostgrestException catch (e) {
       return ErrorResult(e.message);
     } catch (e) {

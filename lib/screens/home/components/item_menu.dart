@@ -20,7 +20,7 @@ class ItemMenu extends StatelessWidget {
       child: InkWell(
         onTap: () {
           if (destination == null) return;
-          AppRoute.to(destination);
+          AppRoute.to(destination, settings: RouteSettings(name: title));
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,

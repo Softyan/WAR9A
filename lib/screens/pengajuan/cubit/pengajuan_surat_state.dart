@@ -2,7 +2,7 @@ part of 'pengajuan_surat_cubit.dart';
 
 @MappableClass()
 class PengajuanSuratState extends BaseState with PengajuanSuratStateMappable {
-  final List<Surat> listSurat;
+  final List<PengajuanSurat> pengajuanSurats;
   const PengajuanSuratState(
-      {this.listSurat = const [], super.message, super.statusState});
+      {this.pengajuanSurats = const [], super.message, super.statusState});
 }

@@ -1,5 +1,8 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
+import 'enums/jenis_kelamin.dart';
+import 'enums/role.dart';
+
 part 'user.mapper.dart';
 
 @MappableClass(ignoreNull: true, caseStyle: CaseStyle.snakeCase)
@@ -12,7 +15,7 @@ class User with UserMappable {
   final JenisKelamin? jenisKelamin;
   final Role role;
   final DateTime? createdAt;
-  final DateTime? birthDay;
+  final DateTime? birthDate;
   final String nik;
   final int rt;
   final bool isActiveWarga;
@@ -26,10 +29,10 @@ class User with UserMappable {
       this.jenisKelamin,
       this.role = Role.warga,
       this.createdAt,
-      this.birthDay,
+      this.birthDate,
       this.nik = '',
       this.rt = 0,
-      this.isActiveWarga = false});
+      this.isActiveWarga = true});
 
   factory User.fromJson(dynamic json) {
     if (json is Map<String, dynamic>) return UserMapper.fromMap(json);
@@ -37,24 +40,4 @@ class User with UserMappable {
     return throw Exception(
         'The argument type \'${json.runtimeType}\' can\'t be assigned');
   }
-}
-
-@MappableEnum()
-enum JenisKelamin {
-  @MappableValue('Laki-Laki')
-  man,
-  @MappableValue('Perempuan')
-  women
-}
-
-@MappableEnum()
-enum Role {
-  @MappableValue('RT')
-  rt,
-  @MappableValue('RW')
-  rw,
-  @MappableValue('Warga')
-  warga,
-  @MappableValue('Sekretaris')
-  sekretaris
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../res/export_res.dart';
+import '../../res/export_res.dart';
 
 class ChoiceChipWidget extends ChoiceChip {
   final String title;

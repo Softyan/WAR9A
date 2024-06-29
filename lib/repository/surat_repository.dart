@@ -6,7 +6,7 @@ import '../models/surat.dart';
 import '../utils/export_utils.dart';
 
 abstract class SuratRepository {
-  Future<BaseResult<List<Surat>>> getListPengajuanSurat({int page});
+  
   Future<BaseResult<List<Surat>>> getDataSurat(
       {int page, bool isSuratMasuk, String? search});
 }
@@ -21,24 +21,6 @@ class SuratRepositoryImpl implements SuratRepository {
   static const String noSurat = "no_surat";
   static const String from = "from";
   static const String title = "title";
-
-  @override
-  Future<BaseResult<List<Surat>>> getListPengajuanSurat({int page = 1}) async {
-    try {
-      final response = await _supabaseClient
-          .from(Constants.table.surat)
-          .select()
-          .range((page - 1) * 10, page * 10)
-          .limit(10);
-      final surats =
-          response.map((element) => Surat.fromJson(element)).toList();
-      return DataResult(surats);
-    } on PostgrestException catch (e) {
-      return ErrorResult(e.message);
-    } catch (e) {
-      return ErrorResult(e.toString());
-    }
-  }
 
   @override
   Future<BaseResult<List<Surat>>> getDataSurat(

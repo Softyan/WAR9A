@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:intl/intl.dart';
 
 import '../../../components/export_components.dart';
-import '../../../models/user.dart';
+import '../../../di/injection.dart';
+import '../../../models/enums/jenis_kelamin.dart';
 import '../../../res/export_res.dart';
+import '../../../utils/global_helpers.dart';
 
 class FormPersonalData extends StatefulWidget {
   final Key formKey;
@@ -105,33 +106,18 @@ class _FormPersonalDataState extends State<FormPersonalData> {
             ),
           ],
         ),
-        FormBuilderDateTimePicker(
-          name: 'birth_day',
-          inputType: InputType.date,
-          format: DateFormat('dd MMM yyyy'),
-          decoration: const InputDecoration(
-            labelText: "Tanggal Lahir",
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(16)),
-              borderSide: BorderSide(width: 2),
-            ),
-          ),
-          validator: FormBuilderValidators.required(),
+        DatetimePickerWidget(
+          'birth_date',
+          label: "Tanggal Lahir",
         ),
         DropdownfieldWidget<JenisKelamin>(
           'jenis_kelamin',
           JenisKelamin.values,
           label: 'Gender',
           onItemsBuilder: (gender) => DropdownMenuItem(
-              value: gender, child: Text(genderMapping(gender))),
+              value: gender,
+              child: Text(getIt<GlobalHelpers>().genderMapping(gender))),
           validator: FormBuilderValidators.required(),
         ),
       ];
-
-  String genderMapping(JenisKelamin gender) {
-    return switch (gender) {
-      JenisKelamin.man => "Laki - Laki",
-      JenisKelamin.women => "Perempuan"
-    };
-  }
 }

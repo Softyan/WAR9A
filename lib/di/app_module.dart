@@ -2,6 +2,8 @@ import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../utils/global_helpers.dart';
+
 @module
 @injectable
 abstract class AppModule {
@@ -14,4 +16,7 @@ abstract class AppModule {
   @preResolve
   @singleton
   Future<SharedPreferences> prefs() => SharedPreferences.getInstance();
+
+  @singleton
+  GlobalHelpers get globalHelpers => GlobalHelpers();
 }

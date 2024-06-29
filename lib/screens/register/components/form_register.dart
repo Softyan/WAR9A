@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
-import '../../../components/textfield_widget.dart';
+import '../../../components/form/textfield_widget.dart';
 
 typedef OnViewPassword = void Function();
 

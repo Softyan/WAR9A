@@ -3,10 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../components/export_components.dart';
 import '../../di/injection.dart';
-import '../../models/surat.dart';
+import '../../models/pengajuan_surat.dart';
 import '../../res/war9a_colors.dart';
 import '../../utils/export_utils.dart';
+import '../form_surat/form_pengajuan_surat_screen.dart';
+import '../preview_pengajuan/preview_pengajuan_screen.dart';
 import 'cubit/pengajuan_surat_cubit.dart';
+import 'item_pengajuan_surat.dart';
 
 class PengajuanSuratScreen extends StatefulWidget {
   const PengajuanSuratScreen({super.key});
@@ -32,43 +35,49 @@ class _PengajuanSuratScreenState extends State<PengajuanSuratScreen> {
         "Pengajuan Surat",
         backgroundColor: context.backgroundColor,
       ),
-      body: Stack(
+      body: Column(
         children: [
-          BlocBuilder<PengajuanSuratCubit, PengajuanSuratState>(
-            bloc: _cubit,
-            builder: (context, state) {
-              if (state.isLoading) {
-                return const LoadingWidget();
-              }
-              if (state.listSurat.isEmpty) {
-                return EmptyDataWidget(
-                  onClick: () => _cubit.getPengajuanSurat(),
-                );
-              }
-              return RefreshIndicator.adaptive(
-                  child: ListWidget(
-                    state.listSurat,
-                    scrollPhysics: const AlwaysScrollableScrollPhysics(),
-                    padding: const EdgeInsets.only(
-                        top: 70, bottom: 8, right: 16, left: 16),
-                    itemBuilder:
-                        (BuildContext context, Surat item, int index) =>
-                            ItemSurat(
-                      surat: item,
-                      index: (index + 1),
-                      fromDataSurat: false,
-                    ),
-                  ),
-                  onRefresh: () async => _cubit.getPengajuanSurat());
-            },
-          ),
           SearchWidget(
             onSubmitted: (String query) {},
-          )
+          ),
+          Expanded(
+            child: BlocBuilder<PengajuanSuratCubit, PengajuanSuratState>(
+              bloc: _cubit,
+              builder: (context, state) {
+                if (state.isLoading) {
+                  return const LoadingWidget();
+                }
+                if (state.pengajuanSurats.isEmpty) {
+                  return EmptyDataWidget(
+                    onClick: () => _cubit.getPengajuanSurat(),
+                  );
+                }
+                return RefreshIndicator.adaptive(
+                    child: ListWidget(
+                      state.pengajuanSurats,
+                      padding:
+                          const EdgeInsets.only(bottom: 8, right: 16, left: 16),
+                      itemBuilder: (BuildContext context, PengajuanSurat item,
+                          int index) {
+                        return ItemPengajuanSurat(
+                          pengajuanSurat: item,
+                          index: (index + 1),
+                          onClick: () => AppRoute.to(PreviewPengajuanScreen(
+                            pengajuanSurat: item,
+                            isPreview: true,
+                          )),
+                        );
+                      },
+                    ),
+                    onRefresh: () async => _cubit.getPengajuanSurat());
+              },
+            ),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton.small(
-        onPressed: () {},
+        onPressed: () => AppRoute.to(const FormPengajuanSuratScreen())
+            .then((value) => _cubit.getPengajuanSurat()),
         backgroundColor: War9aColors.primary,
         child: Icon(Icons.add, color: context.backgroundColor),
       ),
