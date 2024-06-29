@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../components/export_components.dart';
 import '../../data/status_auth.dart';
 import '../../di/injection.dart';
+import '../../res/export_res.dart';
 import '../../utils/export_utils.dart';
 import '../home/home_screen.dart';
 import '../login/login_screen.dart';
@@ -47,6 +48,7 @@ class _MainScreenState extends State<MainScreen> {
         builder: (context, state) {
           return NavigationBar(
             selectedIndex: state,
+            indicatorColor: War9aColors.primaryColor.withOpacity(0.6),
             destinations: _destinations,
             onDestinationSelected: _cubit.selectedTab,
           );
@@ -55,18 +57,28 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  List<Widget> get _pages => const [
-        HomeScreen(),
-        Center(child: Text("Surat")),
-        NotificationScreen(),
-        ProfileScreen()
-      ];
+  List<Widget> get _pages =>
+      const [HomeScreen(), NotificationScreen(), ProfileScreen()];
 
-  List<NavigationDestination> get _destinations => const [
-        NavigationDestination(icon: Text("X"), label: "Home"),
-        NavigationDestination(icon: Text("X"), label: "Surat"),
-        NavigationDestination(icon: Text("X"), label: "Notifikasi"),
-        NavigationDestination(icon: Text("X"), label: "Akun"),
+  List<NavigationDestination> get _destinations => [
+        NavigationDestination(
+            icon: Assets.icons.icHome.svg(),
+            selectedIcon: Assets.icons.icHome.svg(
+                colorFilter:
+                    const ColorFilter.mode(Colors.black, BlendMode.srcIn)),
+            label: "Home"),
+        NavigationDestination(
+            icon: Assets.icons.icNotif.svg(),
+            selectedIcon: Assets.icons.icNotif.svg(
+                colorFilter:
+                    const ColorFilter.mode(Colors.black, BlendMode.srcIn)),
+            label: "Notifikasi"),
+        NavigationDestination(
+            icon: Assets.icons.icAkun.svg(),
+            selectedIcon: Assets.icons.icAkun.svg(
+                colorFilter:
+                    const ColorFilter.mode(Colors.black, BlendMode.srcIn)),
+            label: "Akun"),
       ];
 
   @override
