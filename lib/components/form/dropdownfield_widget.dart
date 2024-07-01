@@ -16,7 +16,8 @@ class DropdownfieldWidget<T> extends FormBuilderDropdown<T> {
       this.label,
       this.onItemsBuilder,
       super.validator,
-      super.initialValue})
+      super.initialValue,
+      super.enabled})
       : super(
             name: keyName,
             items: list.map((item) {

@@ -8,7 +8,7 @@ class DatetimePickerWidget extends FormBuilderDateTimePicker {
   final String? label;
   final String? pattern;
   DatetimePickerWidget(this.keyName,
-      {super.key, this.label, this.pattern, super.initialValue})
+      {super.key, this.label, this.pattern, super.initialValue, super.enabled})
       : super(
           name: keyName,
           inputType: InputType.date,

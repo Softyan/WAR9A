@@ -10,6 +10,7 @@ import '../../res/export_res.dart';
 import '../../utils/export_utils.dart';
 import 'components/item_profile.dart';
 import 'cubit/profile_cubit.dart';
+import 'edit_profile_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   final User? user;
@@ -80,6 +81,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           itemBuilder: (context, item, index) => ItemProfile(
             dataProfile: item,
           ),
+        ),
+        Button(
+          "Perbarui",
+          onPressed: () => AppRoute.to(const EditProfileScreen()).then((value) {
+            _cubit.getUser(user: widget.user);
+          }),
+          width: context.mediaSize.width,
+          textStyle: War9aTextstyle.blackW600Font16
+              .copyWith(fontSize: 18, color: Colors.white),
         ),
         BlocSelector<ProfileCubit, ProfileState, ProfileType>(
             bloc: _cubit,

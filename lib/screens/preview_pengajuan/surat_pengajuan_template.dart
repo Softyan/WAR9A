@@ -7,7 +7,6 @@ import '../../di/injection.dart';
 import '../../models/item_content.dart';
 import '../../models/pengajuan_surat.dart';
 import '../../utils/export_utils.dart';
-import '../../utils/global_helpers.dart';
 
 class SuratPengajuanTemplate {
   // SuratPengajuanTemplate._();

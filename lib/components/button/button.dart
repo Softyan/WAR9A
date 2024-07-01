@@ -12,29 +12,31 @@ class Button extends ElevatedButton {
   final TextStyle? textStyle;
   final Color? backgroundColor;
   final BorderSide? borderStyle;
-  Button(
-    this.text,{
-    super.key,
-    this.newStyle,
-    this.elevation,
-    this.width,
-    this.height,
-    this.borderRadius = 10,
-    required super.onPressed,
-    this.textStyle,
-    this.backgroundColor,
-    this.borderStyle
-  }) : super(
+  Button(this.text,
+      {super.key,
+      this.newStyle,
+      this.elevation,
+      this.width,
+      this.height,
+      this.borderRadius = 10,
+      required super.onPressed,
+      this.textStyle,
+      this.backgroundColor,
+      this.borderStyle})
+      : super(
             child: Text(
               text,
-              style: textStyle ?? War9aTextstyle.textButton,
+              style: textStyle ??
+                  War9aTextstyle.blackW600Font16.copyWith(color: Colors.white),
             ),
             style: newStyle ??
                 ElevatedButton.styleFrom(
                     elevation: elevation,
                     backgroundColor:
                         backgroundColor ?? War9aColors.primaryColor,
-                    fixedSize: width != null || height != null ? Size(width ?? 100, height ?? 50) : null,
+                    fixedSize: width != null || height != null
+                        ? Size(width ?? 100, height ?? 50)
+                        : null,
                     shape: RoundedRectangleBorder(
                         side: borderStyle ?? BorderSide.none,
                         borderRadius: BorderRadius.circular(borderRadius))));

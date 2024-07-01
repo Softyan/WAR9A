@@ -63,46 +63,9 @@ class _FormPersonalDataState extends State<FormPersonalData> {
               "Rukun Tetangga (RT)",
               style: War9aTextstyle.normal,
             ),
-            FormBuilderField<int>(
-              builder: (FormFieldState<int> field) => InputDecorator(
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  errorText: field.errorText,
-                ),
-                child: Wrap(
-                  spacing: 16.0,
-                  alignment: WrapAlignment.spaceBetween,
-                  children: List.generate(4, (i) => i + 1)
-                      .map((rt) => GestureDetector(
-                            onTap: () => setState(() {
-                              selectedRt = rt;
-                              field.didChange(rt);
-                            }),
-                            child: Container(
-                              width: 70,
-                              height: 40,
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                  color: selectedRt == rt
-                                      ? War9aColors.primaryColor
-                                      : null,
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                      color: War9aColors.primaryColor)),
-                              child: Text(
-                                "0$rt",
-                                style: War9aTextstyle.normal.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color:
-                                        selectedRt == rt ? Colors.white : null),
-                              ),
-                            ),
-                          ))
-                      .toList(),
-                ),
-              ),
-              name: 'rt',
+            RtPickerWidget(
+              "rt",
+              initialValue: selectedRt,
             ),
           ],
         ),

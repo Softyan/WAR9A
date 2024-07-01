@@ -10,7 +10,8 @@ typedef Body = Map<String, dynamic>;
 
 abstract class ProfileRepository {
   Future<BaseResult<model.User>> getCurrentUser();
-  Future<BaseResult<model.User>> updateWarga(String id, {Body? data});
+  Future<BaseResult<model.User>> updateWarga(String id,
+      {Body? data, bool updateCurrentUser});
   Future<BaseResult<void>> logOut();
 }
 
@@ -75,14 +76,16 @@ class ProfileRepositoryImpl implements ProfileRepository {
 
   @override
   Future<BaseResult<model.User>> updateWarga(String id,
-      {Map<String, dynamic>? data}) async {
+      {Map<String, dynamic>? data, bool updateCurrentUser = false}) async {
     const idKey = "id";
 
     if (data == null) {
       return ErrorResult("Updated data cant be empty");
     }
 
-    logger.d("Update Warga $id => $data");
+    if (id.isEmpty) {
+      return ErrorResult("Id cant be empty");
+    }
 
     try {
       final response = await _supabase
@@ -91,14 +94,13 @@ class ProfileRepositoryImpl implements ProfileRepository {
           .eq(idKey, id)
           .select();
 
-      logger.d(response);
-
       if (response.isEmpty) {
         return ErrorResult("User not found");
       }
 
       final newUser = model.User.fromJson(response.first);
-      logger.d("Update Warga => $newUser");
+      _preferences.setString(
+          Constants.sharedPreferences.user, newUser.toJson());
 
       return DataResult(newUser);
     } on PostgrestException catch (e) {

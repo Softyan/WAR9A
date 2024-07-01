@@ -18,6 +18,7 @@ class TextFieldWidget extends StatelessWidget {
   final int? maxLines;
   final TextInputAction? inputAction;
   final bool disableValidator;
+  final bool enabled;
   const TextFieldWidget(this.name,
       {super.key,
       this.label,
@@ -33,6 +34,7 @@ class TextFieldWidget extends StatelessWidget {
       this.borderRadius,
       this.maxLines,
       this.inputAction = TextInputAction.next,
+      this.enabled = true,
       this.disableValidator = false});
 
   @override
@@ -44,10 +46,11 @@ class TextFieldWidget extends StatelessWidget {
       textCapitalization: textCapitalization,
       keyboardType: keyboardType,
       maxLines: maxLines,
+      enabled: enabled,
       textInputAction: inputAction,
       obscureText: isObscureText,
-      style: const TextStyle(
-        color: Colors.black,
+      style: TextStyle(
+        color: enabled ? Colors.black : null,
       ),
       decoration: InputDecoration(
         labelText: label,

@@ -37,6 +37,23 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(newState);
   }
 
+  void updateCurrentUser(User user) async {
+    emit(state.copyWith(statusState: StatusState.loading));
+
+    final result = await _profileRepository.updateWarga(state.user.id,
+        data: user.toUpdate, updateCurrentUser: true);
+
+    final newState = result.when(
+      result: (data) => state.copyWith(
+          statusState: StatusState.success,
+          user: data,
+          message: "Data berhasil diubah"),
+      error: (message) =>
+          state.copyWith(message: message, statusState: StatusState.failure),
+    );
+    emit(newState);
+  }
+
   void changeStatusDataWarga(User? user) async {
     if (user == null) return;
     emit(state.copyWith(statusState: StatusState.loading));
