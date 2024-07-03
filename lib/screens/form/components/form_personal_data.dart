@@ -82,5 +82,14 @@ class _FormPersonalDataState extends State<FormPersonalData> {
               child: Text(getIt<GlobalHelpers>().genderMapping(gender))),
           validator: FormBuilderValidators.required(),
         ),
+        DropdownfieldWidget<bool>(
+          'is_stay',
+          const [true, false],
+          label: 'Status Domisili',
+          initialValue: true,
+          onItemsBuilder: (stay) => DropdownMenuItem(
+              value: stay, child: Text(stay ? "Menetap" : "Sementara")),
+          validator: FormBuilderValidators.required(),
+        ),
       ];
 }

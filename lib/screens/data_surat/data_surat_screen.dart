@@ -5,7 +5,9 @@ import '../../components/export_components.dart';
 import '../../components/form/choice_chip_widget.dart';
 import '../../di/injection.dart';
 import '../../models/surat.dart';
+import '../../res/export_res.dart';
 import '../../utils/export_utils.dart';
+import 'add_data_surat_screen.dart';
 import 'cubit/data_surat_cubit.dart';
 import 'item_surat.dart';
 
@@ -120,6 +122,22 @@ class _DataSuratScreenState extends State<DataSuratScreen> {
               ))
         ],
       ),
+      floatingActionButton: FloatingActionButton.small(
+        onPressed: _clickAddSurat,
+        backgroundColor: War9aColors.primary,
+        child: Icon(Icons.add, color: context.backgroundColor),
+      ),
     );
+  }
+
+  void _clickAddSurat() async {
+    final isRefresh = await AppRoute.to(const AddDataSuratScreen());
+
+    if (isRefresh == null || isRefresh is! bool) return;
+
+    if (isRefresh == true) {
+      _dataSuratCubit.getDataSurat(isSuratMasuk: _isSuratMasuk, query: _query);
+      return;
+    }
   }
 }

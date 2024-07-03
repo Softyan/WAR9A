@@ -2,14 +2,12 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 
 import '../../components/export_components.dart';
 import '../../di/injection.dart';
 import '../../models/news.dart';
 import '../../res/export_res.dart';
 import '../../utils/export_utils.dart';
-import 'components/pick_image_widget.dart';
 import 'cubit/add_news_cubit.dart';
 
 class AddNewsScreen extends StatefulWidget {
@@ -95,23 +93,14 @@ class _AddNewsScreenState extends State<AddNewsScreen> {
           style: War9aTextstyle.normal,
         ),
         BlocSelector<AddNewsCubit, AddNewsState, String>(
-          bloc: _addNewsCubit,
-          selector: (state) => state.pathImage,
-          builder: (context, state) => FormBuilderField<String>(
-            name: 'image',
-            validator: FormBuilderValidators.required(),
-            builder: (FormFieldState<String> field) => InputDecorator(
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                errorText: field.errorText,
-              ),
-              child: PickImageWidget(
-                imageFile: state,
-                pickImage: _addNewsCubit.pickImage,
-              ),
+            bloc: _addNewsCubit,
+            selector: (state) => state.pathImage,
+            builder: (context, state) => PickFileWidget(
+                  filePaths: [state],
+                  keyName: "image",
+                  pickFile: _addNewsCubit.pickImage,
+                )
             ),
-          ),
-        ),
         const SpacerWidget(16),
         Button("Submit", onPressed: submitNews)
       ];
