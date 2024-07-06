@@ -7,6 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../data/base_state.dart';
 import '../../../data/status_auth.dart';
+import '../../../repository/profile_repository.dart';
 import '../../../utils/export_utils.dart';
 
 part 'main_screen_state.dart';
@@ -16,10 +17,13 @@ part 'main_screen_cubit.mapper.dart';
 class MainScreenCubit extends Cubit<MainScreenState> {
   StreamSubscription<AuthState>? authSubscription;
   final GoTrueClient _auth;
-  MainScreenCubit(this._auth) : super(const MainScreenState());
+  final ProfileRepository _profileRepository;
+  MainScreenCubit(this._auth, this._profileRepository)
+      : super(const MainScreenState());
 
   void init() {
     authSubscription?.cancel();
+    refreshRole();
     authSubscription = _auth.onAuthStateChange.listen((event) {
       logger.d("AuthStateChange: ${event.event}");
       final session = event.session;
@@ -43,6 +47,34 @@ class MainScreenCubit extends Cubit<MainScreenState> {
 
   void selectedTab(int index) {
     emit(state.copyWith(selectedIndex: index));
+    refreshRole();
+  }
+
+  void refreshRole() async {
+    emit(state.copyWith(statusState: StatusState.loading));
+    final result = await _profileRepository.getCurrentUser(getOnline: true);
+
+    final newState = result.when(
+      result: (data) {
+        return state.copyWith(
+            statusState: StatusState.idle, isActiveWarga: data.isActiveWarga);
+      },
+      error: (message) =>
+          state.copyWith(message: message, statusState: StatusState.failure),
+    );
+    emit(newState);
+  }
+
+  void logOut() async {
+    emit(state.copyWith(statusState: StatusState.loading));
+    final result = await _profileRepository.logOut();
+
+    final newState = result.when(
+      result: (data) => state.copyWith(statusState: StatusState.idle),
+      error: (message) =>
+          state.copyWith(message: message, statusState: StatusState.failure),
+    );
+    emit(newState);
   }
 
   @override

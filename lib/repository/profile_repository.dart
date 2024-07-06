@@ -9,7 +9,7 @@ import '../utils/export_utils.dart';
 typedef Body = Map<String, dynamic>;
 
 abstract class ProfileRepository {
-  Future<BaseResult<model.User>> getCurrentUser();
+  Future<BaseResult<model.User>> getCurrentUser({bool getOnline});
   Future<BaseResult<model.User>> updateWarga(String id,
       {Body? data, bool updateCurrentUser});
   Future<BaseResult<void>> logOut();
@@ -24,14 +24,17 @@ class ProfileRepositoryImpl implements ProfileRepository {
   ProfileRepositoryImpl(this._supabase, this._auth, this._preferences);
 
   @override
-  Future<BaseResult<model.User>> getCurrentUser() async {
+  Future<BaseResult<model.User>> getCurrentUser(
+      {bool getOnline = false}) async {
     try {
-      final savedUser =
-          _preferences.getString(Constants.sharedPreferences.user);
+      if (!getOnline) {
+        final savedUser =
+            _preferences.getString(Constants.sharedPreferences.user);
 
-      if (savedUser != null && savedUser.isNotEmpty) {
-        final user = model.User.fromJson(savedUser);
-        return DataResult(user);
+        if (savedUser != null && savedUser.isNotEmpty) {
+          final user = model.User.fromJson(savedUser);
+          return DataResult(user);
+        }
       }
 
       final session = _auth.currentSession;
@@ -51,6 +54,8 @@ class ProfileRepositoryImpl implements ProfileRepository {
       }
 
       final user = model.User.fromJson(response);
+      await _preferences.setString(Constants.sharedPreferences.user, user.toJson());
+      await _preferences.setString(Constants.sharedPreferences.role, user.role.name);
       return DataResult(user);
     } on PostgrestException catch (e) {
       return ErrorResult(e.message);
@@ -65,7 +70,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
   Future<BaseResult<void>> logOut() async {
     try {
       final response = await _auth.signOut();
-      _preferences.clear();
+      await _preferences.clear();
       return DataResult(response);
     } on AuthException catch (e) {
       return ErrorResult(e.message);

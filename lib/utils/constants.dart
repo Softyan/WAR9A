@@ -22,4 +22,5 @@ class SharedPreferencesConstants {
   final String isPersonalForm = "is_personal_form";
   final String tempUserRegister = "temp_user_register";
   final String user = "user_json";
+  final String role = "role";
 }

@@ -8,6 +8,7 @@ import '../../res/export_res.dart';
 import '../../utils/export_utils.dart';
 import '../home/home_screen.dart';
 import '../login/login_screen.dart';
+import '../not_warga/not_active_warga_screen.dart';
 import '../notif/notification_screen.dart';
 import '../profile/profile_screen.dart';
 import 'cubit/main_screen_cubit.dart';
@@ -34,7 +35,9 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       body: BlocConsumer<MainScreenCubit, MainScreenState>(
           bloc: _cubit,
-          builder: (context, state) => _pages.elementAt(state.selectedIndex),
+          builder: (context, state) => state.isActiveWarga
+              ? _pages.elementAt(state.selectedIndex)
+              : NotActiveWargaScreen(cubit: _cubit),
           listener: (context, state) {
             if (state.statusAuth == StatusAuth.register) {
               context.snackbar.showSnackBar(

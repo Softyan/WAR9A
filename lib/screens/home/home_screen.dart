@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../components/export_components.dart';
 import '../../di/injection.dart';
 import '../../res/export_res.dart';
-import '../../utils/app_context.dart';
+import '../../utils/export_utils.dart';
 import 'cubit/home_cubit.dart';
 
 class HomeScreen extends StatefulWidget {

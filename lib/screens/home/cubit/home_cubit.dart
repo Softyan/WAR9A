@@ -4,11 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../data/base_state.dart';
+import '../../../models/enums/role.dart';
+import '../../../models/item_dashboard.dart';
 import '../../../models/news.dart';
 import '../../../models/user.dart';
 import '../../../repository/news_repository.dart';
 import '../../../repository/profile_repository.dart';
 import '../../../res/export_res.dart';
+import '../../../utils/export_utils.dart';
+import '../../add_news/add_news_screen.dart';
+import '../../data_surat/add_data_surat_screen.dart';
+import '../../data_surat/data_surat_screen.dart';
+import '../../data_warga/data_warga_screen.dart';
+import '../../form_surat/form_pengajuan_surat_screen.dart';
+import '../../pengajuan/pengajuan_surat_screen.dart';
 import '../components/card_profile.dart';
 import '../components/menu_dashboard.dart';
 import '../components/news_home.dart';
@@ -41,7 +50,13 @@ class HomeCubit extends Cubit<HomeState> {
     if (user != null) {
       _contents.add(CardProfile(user: user));
     }
-    _contents.add(const MenuDashboard());
+
+    final contentDashboard = _getMenuDashboard(user?.role);
+
+    _contents.add(MenuDashboard(
+      contents: contentDashboard,
+    ));
+
     if (news.isNotEmpty) {
       _contents.add(NewsHome(news: news));
     }
@@ -75,4 +90,56 @@ class HomeCubit extends Cubit<HomeState> {
     );
     emit(newState);
   }
+
+  List<ItemDashboard> _getMenuDashboard(Role? role) {
+    logger.d("role: $role");
+    return switch (role) {
+      Role.rw || Role.rt => _contentsRTRW,
+      Role.sekretaris => _contentsSekre,
+      _ => _contentsWarga
+    };
+  }
+
+// TODO : Adding the icons
+  List<ItemDashboard> get _contentsRTRW => [
+        ItemDashboard(
+            title: "Pengajuan Surat",
+            path: Assets.icons.pengajuanSurat.path,
+            destination: const PengajuanSuratScreen()),
+        ItemDashboard(
+            title: "Data Warga",
+            path: Assets.icons.dataWarga.path,
+            destination: const DataWargaScreen()),
+        ItemDashboard(
+            title: "Data Surat",
+            path: Assets.icons.dataSurat.path,
+            destination: const DataSuratScreen()),
+      ];
+
+  List<ItemDashboard> get _contentsSekre => [
+        ItemDashboard(
+            title: "Data Surat",
+            path: null,
+            destination: const DataSuratScreen()),
+        ItemDashboard(
+            title: "Tambah Surat",
+            path: null,
+            destination: const AddDataSuratScreen()),
+        ItemDashboard(
+            title: "Tambah Berita",
+            path: null,
+            destination: const AddNewsScreen()),
+      ];
+
+  List<ItemDashboard> get _contentsWarga => [
+        ItemDashboard(
+            title: "Data Pengajuan",
+            path: null,
+            destination: const PengajuanSuratScreen()),
+        ItemDashboard(
+            title: "Ajukan Surat",
+            path: null,
+            destination: const FormPengajuanSuratScreen()),
+        ItemDashboard(title: "Status Pengajuan", path: null, destination: null),
+      ];
 }
