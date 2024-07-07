@@ -79,7 +79,6 @@ class _DataSuratScreenState extends State<DataSuratScreen> {
                         ],
                       ),
                     ),
-                    const Expanded(child: AddButton())
                   ],
                 ),
               )
