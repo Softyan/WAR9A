@@ -20,62 +20,60 @@ class ItemNews extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 8),
       child: Container(
         width: context.mediaSize.width,
-        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
             color: index.isEven
                 ? War9aColors.primaryColor.withOpacity(0.22)
                 : War9aColors.greyE2.withOpacity(0.15),
             borderRadius: BorderRadius.circular(10)),
-        child: Row(
-          children: [
-            Expanded(
-                child: Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: Container(
-                  height: 60,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: War9aColors.greyF2),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: CachedNetworkImage(
-                      imageUrl: image,
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) => const Center(
-                          child: CircularProgressIndicator.adaptive()),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.no_photography_rounded),
-                    ),
-                  )),
-            )),
-            Expanded(
-                flex: 2,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: War9aTextstyle.blackW500Font13,
-                    ),
-                    const SpacerWidget(4),
-                    Text(
-                      createdAt?.formatDefault ?? '-',
-                      style: War9aTextstyle.blackW400Font10,
-                    )
-                  ],
+        child: InkWell(
+          onTap: onClick,
+          borderRadius: BorderRadius.circular(10),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                    child: Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: Container(
+                      height: 60,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: War9aColors.greyF2),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: CachedNetworkImage(
+                          imageUrl: image,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => const Center(
+                              child: CircularProgressIndicator.adaptive()),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.no_photography_rounded),
+                        ),
+                      )),
                 )),
-            Expanded(
-                child: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Button(
-                'Baca',
-                onPressed: onClick,
-              ),
-            ))
-          ],
+                Expanded(
+                    flex: 3,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: War9aTextstyle.blackW500Font13,
+                        ),
+                        const SpacerWidget(4),
+                        Text(
+                          createdAt?.formatDefault ?? '-',
+                          style: War9aTextstyle.blackW400Font10,
+                        )
+                      ],
+                    )),
+              ],
+            ),
+          ),
         ),
       ),
     );

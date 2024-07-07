@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../components/export_components.dart';
 import '../../di/injection.dart';
+import '../../models/enums/role.dart';
 import '../../models/news.dart';
 import '../../utils/export_utils.dart';
 import '../add_news/add_news_screen.dart';
@@ -37,8 +38,7 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
       ),
       body: Column(
         children: [
-          Expanded(
-              child: Column(
+          Column(
             children: [
               SearchWidget(
                 onSubmitted: (String query) {
@@ -46,51 +46,57 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                   _newsCubit.getAllNews(search: query);
                 },
               ),
-              Container(
-                width: context.mediaSize.width,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                alignment: Alignment.centerRight,
-                child: AddButton(
-                  onClick: () => AppRoute.to(const AddNewsScreen()),
-                ),
-              )
-            ],
-          )),
-          Expanded(
-              flex: 5,
-              child: BlocBuilder<AllNewsCubit, AllNewsState>(
+              BlocSelector<AllNewsCubit, AllNewsState, Role>(
                 bloc: _newsCubit,
-                builder: (BuildContext context, AllNewsState state) {
-                  if (state.isLoading) {
-                    return const LoadingWidget();
-                  }
-
-                  if (state.news.isEmpty) {
-                    return EmptyDataWidget(
-                      onClick: () => _newsCubit.getAllNews(search: search),
-                    );
-                  }
-
-                  return RefreshIndicator.adaptive(
-                    child: ListWidget(
-                      state.news,
-                      scrollPhysics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                      itemBuilder:
-                          (BuildContext context, News item, int index) =>
-                              ItemNews(
-                        news: item,
-                        index: index + 1,
-                        onClick: () =>
-                            AppRoute.to(DetailNewsScreen(news: item)),
-                      ),
+                selector: (state) => state.role,
+                builder: (context, state) {
+                  if (state == Role.warga) return Container();
+                  return Container(
+                    width: context.mediaSize.width,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    alignment: Alignment.centerRight,
+                    child: AddButton(
+                      onClick: () => AppRoute.to(const AddNewsScreen()),
                     ),
-                    onRefresh: () async =>
-                        _newsCubit.getAllNews(search: search),
                   );
                 },
-              ))
+              )
+            ],
+          ),
+          Expanded(
+              child: BlocBuilder<AllNewsCubit, AllNewsState>(
+            bloc: _newsCubit,
+            builder: (BuildContext context, AllNewsState state) {
+              if (state.isLoading) {
+                return const LoadingWidget();
+              }
+
+              if (state.news.isEmpty) {
+                return EmptyDataWidget(
+                  onClick: () => _newsCubit.getAllNews(search: search),
+                );
+              }
+
+              return RefreshIndicator.adaptive(
+                onRefresh: () async => _newsCubit.getAllNews(search: search),
+                child: ListWidget(
+                  state.news,
+                  scrollPhysics: state.news.length > 10
+                      ? const BouncingScrollPhysics()
+                      : const AlwaysScrollableScrollPhysics(),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  itemBuilder: (BuildContext context, News item, int index) =>
+                      ItemNews(
+                    news: item,
+                    index: index + 1,
+                    onClick: () => AppRoute.to(DetailNewsScreen(news: item)),
+                  ),
+                ),
+              );
+            },
+          ))
         ],
       ),
     );
