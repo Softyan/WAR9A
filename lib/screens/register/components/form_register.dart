@@ -8,9 +8,11 @@ typedef OnViewPassword = void Function();
 
 class FormRegister extends StatefulWidget {
   final Key? formKey;
+  final void Function()? onSubmitted;
   const FormRegister(
     this.formKey, {
     super.key,
+    this.onSubmitted,
   });
 
   @override
@@ -73,6 +75,8 @@ class _FormRegisterState extends State<FormRegister> {
               validateMode: AutovalidateMode.onUserInteraction,
               maxLines: 1,
               isObscureText: isHiddenConfirmPassword,
+              inputAction: TextInputAction.go,
+              onSubmitted: (p0) => widget.onSubmitted?.call(),
               suffixIcon: IconButton(
                   onPressed: () {
                     setState(() {

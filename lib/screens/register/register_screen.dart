@@ -86,7 +86,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
         Text("Daftar\nAkun Baru", style: War9aTextstyle.title),
         const SpacerWidget(16),
-        FormRegister(_formKey),
+        FormRegister(_formKey, onSubmitted: onSubmit),
         Button(
           "Daftar",
           width: context.mediaSize.width,

@@ -10,11 +10,12 @@ class FormLogin extends StatelessWidget {
   final Key? formKey;
   final bool isHiddenPassword;
   final OnViewPassword onViewPassword;
+  final void Function()? onSubmit;
   const FormLogin(
       {super.key,
       this.formKey,
       required this.isHiddenPassword,
-      required this.onViewPassword});
+      required this.onViewPassword, this.onSubmit});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +38,9 @@ class FormLogin extends StatelessWidget {
                 label: 'Password',
                 validateMode: AutovalidateMode.onUserInteraction,
                 isObscureText: isHiddenPassword,
+                inputAction: TextInputAction.go,
                 maxLines: 1,
+                onSubmitted: (p0) => onSubmit?.call(),
                 suffixIcon: IconButton(
                     onPressed: onViewPassword,
                     icon: Icon(isHiddenPassword

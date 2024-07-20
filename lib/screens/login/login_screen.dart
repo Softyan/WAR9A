@@ -83,7 +83,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             isHiddenPassword: isHiddenPassword,
                             onViewPassword: () => setState(() {
                                   isHiddenPassword = !isHiddenPassword;
-                                })),
+                                }),
+                            onSubmit: onSubmit),
                         Button(
                           "Login",
                           width: context.mediaSize.width,

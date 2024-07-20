@@ -19,6 +19,7 @@ class TextFieldWidget extends StatelessWidget {
   final TextInputAction? inputAction;
   final bool disableValidator;
   final bool enabled;
+  final void Function(String?)? onSubmitted;
   const TextFieldWidget(this.name,
       {super.key,
       this.label,
@@ -35,7 +36,8 @@ class TextFieldWidget extends StatelessWidget {
       this.maxLines,
       this.inputAction = TextInputAction.next,
       this.enabled = true,
-      this.disableValidator = false});
+      this.disableValidator = false,
+      this.onSubmitted});
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +51,7 @@ class TextFieldWidget extends StatelessWidget {
       enabled: enabled,
       textInputAction: inputAction,
       obscureText: isObscureText,
+      onSubmitted: onSubmitted,
       style: TextStyle(
         color: enabled ? Colors.black : null,
       ),
