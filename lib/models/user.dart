@@ -20,6 +20,7 @@ class User with UserMappable {
   final int rt;
   final bool isActiveWarga;
   final bool isStay;
+  final String ttd;
 
   const User(
       {this.id = '',
@@ -34,7 +35,8 @@ class User with UserMappable {
       this.nik = '',
       this.rt = 0,
       this.isActiveWarga = true,
-      this.isStay = true});
+      this.isStay = true,
+      this.ttd = ""});
 
   factory User.fromJson(dynamic json) {
     if (json is Map<String, dynamic>) return UserMapper.fromMap(json);
@@ -43,9 +45,6 @@ class User with UserMappable {
         'The argument type \'${json.runtimeType}\' can\'t be assigned');
   }
 
-  Map<String, dynamic> get toUpdate => {
-    "alamat": alamat,
-    "rt": rt,
-    "is_stay": isStay
-  };
+  Map<String, dynamic> get toUpdate =>
+      {"alamat": alamat, "rt": rt, "is_stay": isStay};
 }

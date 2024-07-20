@@ -4,6 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../../components/export_components.dart';
 import '../../di/injection.dart';
+import '../../models/enums/role.dart';
 import '../../models/pengajuan_surat.dart';
 import '../../utils/export_utils.dart';
 import '../preview_pengajuan/preview_pengajuan_screen.dart';
@@ -72,6 +73,9 @@ class _FormPengajuanSuratScreenState extends State<FormPengajuanSuratScreen> {
     final pengajuanSurat = formResult.copyWith(
         rt: _pengajuanSurat?.rt, from: _pengajuanSurat?.from);
     logger.d(pengajuanSurat);
-    AppRoute.to(PreviewPengajuanScreen(pengajuanSurat: pengajuanSurat));
+    AppRoute.to(PreviewPengajuanScreen(
+      pengajuanSurat: pengajuanSurat,
+      role: Role.warga,
+    ));
   }
 }

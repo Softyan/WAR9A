@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../data/data_result.dart';
 import '../models/enums/jenis_kelamin.dart';
@@ -18,8 +20,24 @@ class GlobalHelpers {
   Future<BaseResult<String>> pickFile({double maxFileSize = 2.0}) async {
     try {
       logger.d("Awaiting pick image");
-      FilePickerResult? result =
-          await FilePicker.platform.pickFiles(type: FileType.image);
+
+      if (Platform.isAndroid) {
+        bool permissionStatus;
+        final deviceInfo = await DeviceInfoPlugin().androidInfo;
+
+        if (deviceInfo.version.sdkInt > 32) {
+          permissionStatus = await Permission.photos.request().isGranted;
+        } else {
+          permissionStatus = await Permission.storage.request().isGranted;
+        }
+
+        if (!permissionStatus) {
+          return ErrorResult("Permission denied");
+        }
+      }
+
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+          type: FileType.custom, allowedExtensions: ["jpg", "png", "jpeg"]);
 
       if (result == null) return ErrorResult("Canceled pick image");
 

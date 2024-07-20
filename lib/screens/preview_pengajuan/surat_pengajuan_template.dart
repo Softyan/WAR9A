@@ -1,18 +1,34 @@
+import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:file_picker/file_picker.dart';
+import 'package:injectable/injectable.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
+import 'package:printing/printing.dart';
 
 import '../../di/injection.dart';
 import '../../models/item_content.dart';
 import '../../models/pengajuan_surat.dart';
 import '../../utils/export_utils.dart';
 
+@singleton
 class SuratPengajuanTemplate {
-  // SuratPengajuanTemplate._();
   Future<Uint8List> suratPengajuanPDf(PengajuanSurat pengajuanSurat) async {
-    final PengajuanSurat(:rt, :createdAt, :noSurat) = pengajuanSurat;
+    final PengajuanSurat(
+      :rt,
+      :createdAt,
+      :noSurat,
+      :ttdRt,
+      :ttdRw,
+      :nameRt,
+      :nameRw
+    ) = pengajuanSurat;
     final pdf = Document();
+
+    final imgTtdRt = await _getImageTtd(ttdRt);
+    final imgTtdRw = await _getImageTtd(ttdRw);
+
     pdf.addPage(Page(build: (context) {
       return Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -59,15 +75,22 @@ class SuratPengajuanTemplate {
             ]),
             Divider(color: PdfColors.white),
             SizedBox(height: 32),
-            Row(children: [
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               Expanded(
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                    Text(
+                        "Bekasi, ${(createdAt ?? DateTime.now()).formatWithoutTime}",
+                        style: const TextStyle(color: PdfColors.white)),
                     Text("KETUA RW 09"),
-                    SizedBox(height: 32),
-                    Text("(.................................)")
+                    Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: imgTtdRw ?? SizedBox(height: 32)),
+                    Text(nameRw.isNotEmpty
+                        ? nameRw
+                        : "(.................................)")
                   ])),
               Expanded(
                   child: Column(
@@ -77,13 +100,39 @@ class SuratPengajuanTemplate {
                     Text(
                         "Bekasi, ${(createdAt ?? DateTime.now()).formatWithoutTime}"),
                     Text("KETUA RT 0$rt"),
-                    SizedBox(height: 32),
-                    Text("(.................................)")
+                    Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: imgTtdRt ?? SizedBox(height: 32)),
+                    Text(nameRt.isNotEmpty
+                        ? nameRt
+                        : "(.................................)")
                   ]))
             ])
           ]);
     }));
     return pdf.save();
+  }
+
+  Future<void> downloadPdf(PengajuanSurat pengajuanSurat) async {
+    try {
+      String? directoryPath = await FilePicker.platform.getDirectoryPath();
+
+      if (directoryPath == null || directoryPath.isEmpty) {
+        throw "Directory not found";
+      }
+
+      final fileName =
+          "Pengajuan-Surat-${DateTime.now().formattedDate(pattern: "ddMMyy")}${pengajuanSurat.id}";
+      final file = File("$directoryPath/$fileName.pdf");
+      final resultPdf = await suratPengajuanPDf(pengajuanSurat);
+      if (file.existsSync()) {
+        await file.delete();
+      }
+      final locateFile = await file.writeAsBytes(resultPdf);
+      logger.d(locateFile.path);
+    } catch (e) {
+      logger.e(e);
+    }
   }
 
   List<Content> _contents(PengajuanSurat pengajuanSurat) {
@@ -113,5 +162,16 @@ class SuratPengajuanTemplate {
       Content(title: "Alamat", text: alamat.capitalEachWord().ifEmpty()),
       Content(title: "Keperluan", text: keperluan.capitalize().ifEmpty()),
     ];
+  }
+
+  Future<Image?> _getImageTtd(String ttd) async {
+    const size = 100.0;
+    if (ttd.isEmpty) return null;
+    if (ttd.isUrl()) {
+      return Image(await networkImage(ttd), width: size, height: size);
+    } else {
+      return Image(MemoryImage(File(ttd).readAsBytesSync()),
+          width: size, height: size, fit: BoxFit.cover);
+    }
   }
 }

@@ -6,16 +6,18 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
 import '../../res/export_res.dart';
+import '../../utils/export_utils.dart';
 
 class PickFileWidget extends StatelessWidget {
   final String keyName;
   final List<String> filePaths;
   final void Function()? pickFile;
   const PickFileWidget(
-      {super.key,
-      required this.filePaths,
-      this.pickFile,
-      required this.keyName});
+    this.keyName, {
+    super.key,
+    required this.filePaths,
+    this.pickFile,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,7 @@ class PickFileWidget extends StatelessWidget {
         ),
         child: Builder(builder: (context) {
           if (filePaths.isNotEmpty) {
+            final ttd = filePaths.first;
             return Container(
               height: 200,
               decoration: BoxDecoration(
@@ -38,10 +41,25 @@ class PickFileWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   child: InkWell(
                     onTap: pickFile,
-                    child: Image.file(
-                      File(filePaths[0]),
-                      fit: BoxFit.cover,
-                    ),
+                    child: ttd.isUrl()
+                        ? Image.network(
+                            ttd,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes !=
+                                          null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                      : null,
+                                ),
+                              );
+                            },
+                          )
+                        : Image.file(
+                            File(ttd),
+                          ),
                   )
 
                   /// Turn on this to continue multiple picked files

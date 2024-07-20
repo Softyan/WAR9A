@@ -96,8 +96,8 @@ class _AddNewsScreenState extends State<AddNewsScreen> {
             bloc: _addNewsCubit,
             selector: (state) => state.pathImage,
             builder: (context, state) => PickFileWidget(
+                  "image",
                   filePaths: state.isEmpty ? [] : [state],
-                  keyName: "image",
                   pickFile: _addNewsCubit.pickImage,
                 )),
         const SpacerWidget(16),

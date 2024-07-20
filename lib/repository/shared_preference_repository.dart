@@ -6,6 +6,7 @@ import '../models/user.dart';
 import '../utils/export_utils.dart';
 
 abstract class SharedPreferenceRepository {
+  void setCurrentUser(User user);
   User? getCurrentUser();
   Role getRole();
 }
@@ -15,11 +16,12 @@ class SharedPreferenceRepositoryImpl implements SharedPreferenceRepository {
   final SharedPreferences _sharedPreferences;
   SharedPreferenceRepositoryImpl(this._sharedPreferences);
 
+  SharedPreferencesConstants key = Constants.sharedPreferences;
+
   @override
   User? getCurrentUser() {
     try {
-      final json =
-          _sharedPreferences.getString(Constants.sharedPreferences.user);
+      final json = _sharedPreferences.getString(key.user);
       if (json == null || json.isEmpty) return null;
       return User.fromJson(json);
     } catch (e) {
@@ -27,10 +29,19 @@ class SharedPreferenceRepositoryImpl implements SharedPreferenceRepository {
       return null;
     }
   }
-  
+
   @override
   Role getRole() {
     final user = getCurrentUser();
     return user?.role ?? Role.warga;
+  }
+
+  @override
+  void setCurrentUser(User user) async {
+    try {
+      await _sharedPreferences.setString(key.user, user.toJson());
+    } catch (e) {
+      rethrow;
+    }
   }
 }

@@ -43,7 +43,7 @@ class ItemDataWarga extends StatelessWidget {
                       maxLines: 1,
                     ),
                     Text(
-                      name.ifEmpty() * 5,
+                      name.ifEmpty(),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style:

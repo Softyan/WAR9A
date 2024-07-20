@@ -3,11 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../components/export_components.dart';
 import '../../di/injection.dart';
+import '../../models/enums/role.dart';
 import '../../models/pengajuan_surat.dart';
+import '../../repository/shared_preference_repository.dart';
 import '../../res/war9a_colors.dart';
 import '../../utils/export_utils.dart';
 import '../form_surat/form_pengajuan_surat_screen.dart';
-import '../preview_pengajuan/preview_pengajuan_screen.dart';
 import 'cubit/pengajuan_surat_cubit.dart';
 import 'item_pengajuan_surat.dart';
 
@@ -20,12 +21,14 @@ class PengajuanSuratScreen extends StatefulWidget {
 
 class _PengajuanSuratScreenState extends State<PengajuanSuratScreen> {
   late final PengajuanSuratCubit _cubit;
+  Role role = Role.warga;
 
   @override
   void initState() {
     super.initState();
     _cubit = getIt<PengajuanSuratCubit>();
     _cubit.getPengajuanSurat();
+    role = getIt<SharedPreferenceRepository>().getRole();
   }
 
   @override
@@ -55,6 +58,7 @@ class _PengajuanSuratScreenState extends State<PengajuanSuratScreen> {
                 return RefreshIndicator.adaptive(
                     child: ListWidget(
                       state.pengajuanSurats,
+                      scrollPhysics: const AlwaysScrollableScrollPhysics(),
                       padding:
                           const EdgeInsets.only(bottom: 8, right: 16, left: 16),
                       itemBuilder: (BuildContext context, PengajuanSurat item,
@@ -62,10 +66,8 @@ class _PengajuanSuratScreenState extends State<PengajuanSuratScreen> {
                         return ItemPengajuanSurat(
                           pengajuanSurat: item,
                           index: (index + 1),
-                          onClick: () => AppRoute.to(PreviewPengajuanScreen(
-                            pengajuanSurat: item,
-                            isPreview: true,
-                          )),
+                          role: role,
+                          onRefresh: _cubit.getPengajuanSurat,
                         );
                       },
                     ),

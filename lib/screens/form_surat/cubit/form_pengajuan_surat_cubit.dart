@@ -4,6 +4,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../../data/base_state.dart';
 import '../../../models/enums/jenis_kelamin.dart';
+import '../../../models/enums/role.dart';
 import '../../../models/pengajuan_surat.dart';
 import '../../../repository/pengajuan_surat_repository.dart';
 import '../../../repository/shared_preference_repository.dart';
@@ -44,6 +45,57 @@ class FormPengajuanSuratCubit extends Cubit<FormPengajuanSuratState> {
     logger.d(pengajuanSurat);
     final result =
         await _pengajuanSuratRepository.ajukanSuratPengajuan(pengajuanSurat);
+    final newState = result.when(
+      result: (data) => state.copyWith(
+          statusState: StatusState.success,
+          message: "Berhasil mengajukan surat"),
+      error: (message) =>
+          state.copyWith(message: message, statusState: StatusState.failure),
+    );
+    emit(newState);
+  }
+
+  void updateTtdPengajuan(PengajuanSurat pengajuanSurat) async {
+    emit(state.copyWith(statusState: StatusState.loading));
+
+    logger.d("pengajuanSurat: $pengajuanSurat");
+    final result =
+        await _pengajuanSuratRepository.updateTtdPengajuan(pengajuanSurat);
+    final newState = result.when(
+      result: (data) => state.copyWith(
+          statusState: StatusState.success,
+          message: "Surat berhasil diperbarui"),
+      error: (message) =>
+          state.copyWith(message: message, statusState: StatusState.failure),
+    );
+    emit(newState);
+  }
+
+  void finishStatusPengajuan(
+      PengajuanSurat pengajuanSurat, bool updateStatusPengajuan) async {
+    logger.d("finishStatusPengajuan: $updateStatusPengajuan");
+    final role = _preferenceRepository.getRole();
+    logger.d("pengajuanSurat: $pengajuanSurat");
+
+    if (role != Role.warga) return;
+    if (!updateStatusPengajuan) return;
+
+    emit(state.copyWith(statusState: StatusState.loading));
+    final result =
+        await _pengajuanSuratRepository.finishPengajuan(pengajuanSurat);
+    final newState = result.when(
+      result: (data) => state.copyWith(statusState: StatusState.idle),
+      error: (message) =>
+          state.copyWith(message: message, statusState: StatusState.failure),
+    );
+    emit(newState);
+  }
+
+  void downloadPengajuan(PengajuanSurat pengajuanSurat) async {
+    emit(state.copyWith(statusState: StatusState.loading));
+
+    final result =
+        await _pengajuanSuratRepository.downloadPengajuan(pengajuanSurat);
     final newState = result.when(
       result: (data) => state.copyWith(
           statusState: StatusState.success,

@@ -1,7 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
 import 'enums/jenis_kelamin.dart';
-import 'step_surat.dart';
+import 'enums/steps.dart';
 
 part 'pengajuan_surat.mapper.dart';
 
@@ -22,6 +22,12 @@ class PengajuanSurat with PengajuanSuratMappable {
   final int rt;
   final String from;
   final Steps steps;
+  final String ttdRt;
+  final String ttdRw;
+  final String nameRt;
+  final String nameRw;
+  final String idRt;
+  final String idRw;
 
   const PengajuanSurat(
       {this.id = 0,
@@ -38,7 +44,13 @@ class PengajuanSurat with PengajuanSuratMappable {
       this.createdAt,
       this.rt = 0,
       this.from = '',
-      this.steps = Steps.pengajuan});
+      this.steps = Steps.pengajuan,
+      this.ttdRt = "",
+      this.ttdRw = "",
+      this.nameRt = "",
+      this.nameRw = "",
+      this.idRt = "",
+      this.idRw = ""});
 
   factory PengajuanSurat.fromJson(dynamic json) {
     if (json is Map<String, dynamic>) return PengajuanSuratMapper.fromMap(json);
@@ -46,6 +58,21 @@ class PengajuanSurat with PengajuanSuratMappable {
     return throw Exception(
         'The argument type \'${json.runtimeType}\' can\'t be assigned');
   }
+
+  Map<String, dynamic> get insertTtdRT => {
+        'ttd_rt': ttdRt,
+        'no_surat': noSurat,
+        'steps': steps.toValue(),
+        'id_rt': idRt,
+        'name_rt': nameRt
+      };
+
+  Map<String, dynamic> get insertTtdRW => {
+        'ttd_rw': ttdRw,
+        'steps': steps.toValue(),
+        'id_rw': idRw,
+        'name_rw': nameRw
+      };
 
   Map<String, dynamic> get insertPengajuanSurat => {
         'name': name,

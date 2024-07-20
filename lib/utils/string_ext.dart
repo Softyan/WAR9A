@@ -33,4 +33,13 @@ extension StringExt on String? {
     if (value == null || value.isEmpty) return value;
     return value.trim().split(' ').map((e) => e.capitalize()).join(' ');
   }
+
+  bool isUrl() {
+    final value = this;
+    if (value == null || value.isEmpty) return false;
+    RegExp regex = RegExp(
+        r'^(http|https)?:\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$');
+
+    return regex.hasMatch(value);
+  }
 }

@@ -94,8 +94,8 @@ class _AddDataSuratScreenState extends State<AddDataSuratScreen> {
           bloc: _dataSuratCubit,
           selector: (state) => state.pathImage,
           builder: (context, state) => PickFileWidget(
+            "image",
             filePaths: state.isEmpty ? [] : [state],
-            keyName: "image",
             pickFile: _dataSuratCubit.pickImageSurat,
           ),
         ),
