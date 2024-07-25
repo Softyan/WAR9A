@@ -13,7 +13,8 @@ import 'cubit/pengajuan_surat_cubit.dart';
 import 'item_pengajuan_surat.dart';
 
 class PengajuanSuratScreen extends StatefulWidget {
-  const PengajuanSuratScreen({super.key});
+  final bool showingStatus;
+  const PengajuanSuratScreen({super.key, this.showingStatus = false});
 
   @override
   State<PengajuanSuratScreen> createState() => _PengajuanSuratScreenState();
@@ -68,6 +69,7 @@ class _PengajuanSuratScreenState extends State<PengajuanSuratScreen> {
                           index: (index + 1),
                           role: role,
                           onRefresh: _cubit.getPengajuanSurat,
+                          showingStatus: widget.showingStatus,
                         );
                       },
                     ),

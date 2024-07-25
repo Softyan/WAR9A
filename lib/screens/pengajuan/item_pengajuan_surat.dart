@@ -13,12 +13,14 @@ class ItemPengajuanSurat extends StatelessWidget {
   final int index;
   final Role role;
   final void Function()? onRefresh;
+  final bool showingStatus;
   const ItemPengajuanSurat(
       {super.key,
       required this.pengajuanSurat,
       required this.index,
       this.role = Role.warga,
-      this.onRefresh});
+      this.onRefresh,
+      this.showingStatus = false});
 
   @override
   Widget build(BuildContext context) {
@@ -68,19 +70,22 @@ class ItemPengajuanSurat extends StatelessWidget {
                   ],
                 ),
               ),
-              Expanded(
-                  child: Column(
-                children: [
-                  Text(
-                    "Status",
-                    style: War9aTextstyle.normal.copyWith(fontSize: 8),
-                  ),
-                  Text(
-                    steps.toValue(),
-                    style: War9aTextstyle.blackW600Font16.copyWith(fontSize: 8),
-                  )
-                ],
-              ))
+              showingStatus
+                  ? Expanded(
+                      child: Column(
+                      children: [
+                        Text(
+                          "Status",
+                          style: War9aTextstyle.normal.copyWith(fontSize: 8),
+                        ),
+                        Text(
+                          steps.toValue(),
+                          style: War9aTextstyle.blackW600Font16
+                              .copyWith(fontSize: 8),
+                        )
+                      ],
+                    ))
+                  : Container()
             ],
           ),
         ),

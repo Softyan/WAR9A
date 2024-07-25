@@ -142,6 +142,8 @@ class HomeCubit extends Cubit<HomeState> {
         ItemDashboard(
             title: "Status Pengajuan",
             path: Assets.icons.icStatusPengajuan.path,
-            destination: null),
+            destination: const PengajuanSuratScreen(
+              showingStatus: true,
+            )),
       ];
 }
