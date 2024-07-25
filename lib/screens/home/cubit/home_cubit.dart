@@ -100,7 +100,6 @@ class HomeCubit extends Cubit<HomeState> {
     };
   }
 
-// TODO : Adding the icons
   List<ItemDashboard> get _contentsRTRW => [
         ItemDashboard(
             title: "Pengajuan Surat",
@@ -119,27 +118,30 @@ class HomeCubit extends Cubit<HomeState> {
   List<ItemDashboard> get _contentsSekre => [
         ItemDashboard(
             title: "Data Surat",
-            path: null,
+            path: Assets.icons.dataSurat.path,
             destination: const DataSuratScreen()),
         ItemDashboard(
             title: "Tambah Surat",
-            path: null,
+            path: Assets.icons.icAddSurat.path,
             destination: const AddDataSuratScreen()),
         ItemDashboard(
             title: "Tambah Berita",
-            path: null,
+            path: Assets.icons.icAddNews.path,
             destination: const AddNewsScreen()),
       ];
 
   List<ItemDashboard> get _contentsWarga => [
         ItemDashboard(
             title: "Data Pengajuan",
-            path: null,
+            path: Assets.icons.pengajuanSurat.path,
             destination: const PengajuanSuratScreen()),
         ItemDashboard(
             title: "Ajukan Surat",
-            path: null,
+            path: Assets.icons.icAjukanSurat.path,
             destination: const FormPengajuanSuratScreen()),
-        ItemDashboard(title: "Status Pengajuan", path: null, destination: null),
+        ItemDashboard(
+            title: "Status Pengajuan",
+            path: Assets.icons.icStatusPengajuan.path,
+            destination: null),
       ];
 }
