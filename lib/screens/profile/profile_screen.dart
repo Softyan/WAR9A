@@ -109,7 +109,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ];
 
   List<ItemDataProfile> _dataProfile(User user) {
-    final User(:name, :nik, :alamat, :rt, :birthDate) = user;
+    final User(:name, :nik, :alamat, :rt, :birthDate, :isStay) = user;
     return [
       ItemDataProfile(
           title: "Nama", content: name, path: Assets.icons.icNama.path),
@@ -125,6 +125,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           title: "Rukun Tetangga",
           content: "0$rt",
           path: Assets.icons.icRt.path),
+      ItemDataProfile(
+          title: "Domisili",
+          content: isStay ? "Menetap" : "Sementara",
+          path: Assets.icons.icDomisili.path)
     ];
   }
 
