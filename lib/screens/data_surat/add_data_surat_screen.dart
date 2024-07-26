@@ -116,6 +116,6 @@ class _AddDataSuratScreenState extends State<AddDataSuratScreen> {
     final filePaths = formKeyState.value['image'];
     surat = surat.copyWith(suratUrls: [filePaths]);
 
-    // _dataSuratCubit.addSurat(surat);
+    _dataSuratCubit.addSurat(surat);
   }
 }
