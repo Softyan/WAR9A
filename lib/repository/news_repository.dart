@@ -27,7 +27,10 @@ class NewsRepositoryImpl implements NewsRepository {
         query = query.textSearch('title', search, type: TextSearchType.plain);
       }
 
-      final response = await query.range((page - 1) * 10, page * 10).limit(10);
+      final response = await query
+          .order('created_at', ascending: false)
+          .range((page - 1) * 10, page * 10)
+          .limit(10);
 
       final news = response.map((element) => News.fromJson(element)).toList();
       return DataResult(news);
