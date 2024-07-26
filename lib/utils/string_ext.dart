@@ -42,4 +42,13 @@ extension StringExt on String? {
 
     return regex.hasMatch(value);
   }
+
+  String clearMultipleSpaces() {
+    final value = this;
+    if (value == null || value.isEmpty) return '';
+    return value
+        .split('\n')
+        .map((e) => e.trim().replaceAll(RegExp(r'\s+'), ' '))
+        .join('\n');
+  }
 }

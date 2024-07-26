@@ -109,7 +109,8 @@ class _AddNewsScreenState extends State<AddNewsScreen> {
     if (formKeyState == null || !formKeyState.validate()) return;
     formKeyState.save();
     News news = News.fromJson(formKeyState.value);
-    final contents = paragraphs.where((e) => e.isNotEmpty).toList();
+    var contents = paragraphs.where((e) => e.isNotEmpty).toList();
+    contents = contents.map((e) => e.clearMultipleSpaces()).toList();
     news = news.copyWith(contents: contents);
     logger.d(news.toInsertNews);
     _addNewsCubit.addNews(news);
@@ -142,7 +143,7 @@ class _AddNewsScreenState extends State<AddNewsScreen> {
                     return;
                   }
                   setState(() {
-                    paragraphs[i] = p0.trim();
+                    paragraphs[i] = p0;
                   });
                 },
               )),
