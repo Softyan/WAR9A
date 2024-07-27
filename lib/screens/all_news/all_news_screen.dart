@@ -5,6 +5,7 @@ import '../../components/export_components.dart';
 import '../../di/injection.dart';
 import '../../models/enums/role.dart';
 import '../../models/news.dart';
+import '../../repository/shared_preference_repository.dart';
 import '../../utils/export_utils.dart';
 import '../add_news/add_news_screen.dart';
 import '../detail_news/detail_news_screen.dart';
@@ -21,11 +22,13 @@ class AllNewsScreen extends StatefulWidget {
 class _AllNewsScreenState extends State<AllNewsScreen> {
   late final AllNewsCubit _newsCubit;
   String? search;
+  late final Role role;
 
   @override
   void initState() {
     super.initState();
     _newsCubit = getIt<AllNewsCubit>();
+    role = getIt<SharedPreferenceRepository>().getRole();
     _newsCubit.getAllNews();
   }
 
@@ -46,22 +49,27 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                   _newsCubit.getAllNews(search: query);
                 },
               ),
-              BlocSelector<AllNewsCubit, AllNewsState, Role>(
-                bloc: _newsCubit,
-                selector: (state) => state.role,
-                builder: (context, state) {
-                  if (state == Role.warga) return Container();
-                  return Container(
-                    width: context.mediaSize.width,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    alignment: Alignment.centerRight,
-                    child: AddButton(
-                      onClick: () => AppRoute.to(const AddNewsScreen()),
-                    ),
-                  );
-                },
-              )
+              role == Role.sekretaris
+                  ? BlocSelector<AllNewsCubit, AllNewsState, Role>(
+                      bloc: _newsCubit,
+                      selector: (state) => state.role,
+                      builder: (context, state) {
+                        if (state == Role.warga) return Container();
+                        return Container(
+                          width: context.mediaSize.width,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          alignment: Alignment.centerRight,
+                          child: AddButton(
+                            onClick: () => AppRoute.to(const AddNewsScreen())
+                                .then((value) {
+                              _newsCubit.getAllNews(search: search);
+                            }),
+                          ),
+                        );
+                      },
+                    )
+                  : const SizedBox()
             ],
           ),
           Expanded(
@@ -91,7 +99,10 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                       ItemNews(
                     news: item,
                     index: index + 1,
-                    onClick: () => AppRoute.to(DetailNewsScreen(news: item)),
+                    onClick: () =>
+                        AppRoute.to(DetailNewsScreen(news: item)).then((value) {
+                      _newsCubit.getAllNews(search: search);
+                    }),
                   ),
                 ),
               );

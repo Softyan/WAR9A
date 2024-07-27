@@ -17,6 +17,10 @@ class AddNewsCubit extends Cubit<AddNewsState> {
   AddNewsCubit(this._newsRepository, this._globalHelpers)
       : super(const AddNewsState());
 
+  void initial(News? news) {
+    emit(state.copyWith(news: news, pathImage: news?.image));
+  }
+
   void addNews(News news) async {
     emit(state.copyWith(statusState: StatusState.loading));
 
@@ -26,7 +30,8 @@ class AddNewsCubit extends Cubit<AddNewsState> {
         result: (News data) => state.copyWith(
             statusState: StatusState.success,
             message: "News was added",
-            pathImage: ""),
+            pathImage: "",
+            news: data),
         error: (String message) =>
             state.copyWith(statusState: StatusState.failure, message: message));
 
@@ -42,6 +47,21 @@ class AddNewsCubit extends Cubit<AddNewsState> {
             state.copyWith(pathImage: data, statusState: StatusState.idle),
         error: (String message) =>
             state.copyWith(statusState: StatusState.failure, message: message));
+    emit(newState);
+  }
+
+  void updateNews(News news) async {
+    emit(state.copyWith(statusState: StatusState.loading));
+
+    final result = await _newsRepository.updateNews(news);
+    final newState = result.when(
+        result: (News data) => state.copyWith(
+            statusState: StatusState.success,
+            message: "News was updated",
+            news: data),
+        error: (String message) =>
+            state.copyWith(statusState: StatusState.failure, message: message));
+
     emit(newState);
   }
 }

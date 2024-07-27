@@ -29,12 +29,13 @@ part 'home_cubit.mapper.dart';
 class HomeCubit extends Cubit<HomeState> {
   final NewsRepository _newsRepository;
   final ProfileRepository _profileRepository;
-  final List<Widget> _contents = [];
+  List<Widget> _contents = [];
 
   HomeCubit(this._newsRepository, this._profileRepository)
       : super(const HomeState());
 
   void init() async {
+    _contents = [];
     await _getCurrentUser();
     await _getNews();
     _getBaseContents();

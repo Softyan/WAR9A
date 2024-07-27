@@ -11,6 +11,8 @@ import '../utils/export_utils.dart';
 abstract class NewsRepository {
   Future<BaseResult<List<News>>> getNews({int page = 1, String? search});
   Future<BaseResult<News>> addNews(News news);
+  Future<BaseResult<String>> deleteNews(int newsId);
+  Future<BaseResult<News>> updateNews(News news);
 }
 
 @Injectable(as: NewsRepository)
@@ -18,10 +20,12 @@ class NewsRepositoryImpl implements NewsRepository {
   final SupabaseClient _supabase;
   NewsRepositoryImpl(this._supabase);
 
+  final String newsTable = Constants.table.news;
+
   @override
   Future<BaseResult<List<News>>> getNews({int page = 1, String? search}) async {
     try {
-      var query = _supabase.from(Constants.table.news).select();
+      var query = _supabase.from(newsTable).select();
 
       if (search != null && search.isNotEmpty && search.length > 3) {
         query = query.textSearch('title', search, type: TextSearchType.plain);
@@ -62,7 +66,7 @@ class NewsRepositoryImpl implements NewsRepository {
 
       /// get cover image url
       final String imageUrl =
-          _supabase.storage.from(Constants.table.news).getPublicUrl(uploadPath);
+          _supabase.storage.from(newsTable).getPublicUrl(uploadPath);
 
       /// update cover image
       final result = await _supabase
@@ -74,6 +78,40 @@ class NewsRepositoryImpl implements NewsRepository {
       newNews = News.fromJson(result.first);
 
       return DataResult(newNews);
+    } on PostgrestException catch (e) {
+      return ErrorResult(e.message);
+    } catch (e) {
+      return ErrorResult(e.toString());
+    }
+  }
+
+  @override
+  Future<BaseResult<String>> deleteNews(int newsId) async {
+    try {
+      await _supabase.from(newsTable).delete().eq('id', newsId);
+      return DataResult("News deleted successfully");
+    } on PostgrestException catch (e) {
+      return ErrorResult(e.message);
+    } catch (e) {
+      return ErrorResult(e.toString());
+    }
+  }
+
+  @override
+  Future<BaseResult<News>> updateNews(News news) async {
+    try {
+      final idNews = news.id;
+      if (idNews <= 0) {
+        return ErrorResult("News not found");
+      }
+
+      final response = await _supabase
+          .from(newsTable)
+          .update(news.toMap())
+          .eq('id', idNews)
+          .select()
+          .single();
+      return DataResult(News.fromJson(response));
     } on PostgrestException catch (e) {
       return ErrorResult(e.message);
     } catch (e) {

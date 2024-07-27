@@ -47,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: ListWidget(
               state.contents,
               isSeparated: true,
+              scrollPhysics: const AlwaysScrollableScrollPhysics(),
               padding: const EdgeInsets.only(bottom: 8),
               itemBuilder: (context, item, index) => item,
               separatorBuilder: (context, item, index) =>

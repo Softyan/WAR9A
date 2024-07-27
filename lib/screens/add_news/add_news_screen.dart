@@ -11,7 +11,8 @@ import '../../utils/export_utils.dart';
 import 'cubit/add_news_cubit.dart';
 
 class AddNewsScreen extends StatefulWidget {
-  const AddNewsScreen({super.key});
+  final News? news;
+  const AddNewsScreen({super.key, this.news});
 
   @override
   State<AddNewsScreen> createState() => _AddNewsScreenState();
@@ -21,19 +22,23 @@ class _AddNewsScreenState extends State<AddNewsScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   late final AddNewsCubit _addNewsCubit;
   late final LoadingDialog _loadingDialog;
-  List<String> paragraphs = [''];
+  late List<String> _paragraphs;
+  News? _news;
 
   @override
   void initState() {
     super.initState();
     _loadingDialog = getIt<LoadingDialog>();
     _addNewsCubit = getIt<AddNewsCubit>();
+    _news = widget.news;
+    _addNewsCubit.initial(_news);
+    _paragraphs = _news?.contents ?? [''];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppbarWidget("Tambah Berita"),
+      appBar: AppbarWidget("${_news == null ? "Tambah" : "Edit"} Berita"),
       body: BlocListener<AddNewsCubit, AddNewsState>(
         bloc: _addNewsCubit,
         listener: (BuildContext context, AddNewsState state) {
@@ -45,6 +50,7 @@ class _AddNewsScreenState extends State<AddNewsScreen> {
             _formKey.currentState?.reset();
             context.snackbar.showSnackBar(
                 SnackbarWidget(state.message, state: SnackbarState.success));
+            AppRoute.back(state.news);
           }
           if (state.isError) {
             context.snackbar.showSnackBar(
@@ -71,8 +77,9 @@ class _AddNewsScreenState extends State<AddNewsScreen> {
           "Judul Berita",
           style: War9aTextstyle.normal,
         ),
-        const TextFieldWidget(
+        TextFieldWidget(
           'title',
+          initialValue: _news?.title,
           hint: "Title",
         ),
         const Text(
@@ -101,7 +108,7 @@ class _AddNewsScreenState extends State<AddNewsScreen> {
                   pickFile: _addNewsCubit.pickImage,
                 )),
         const SpacerWidget(16),
-        Button("Submit", onPressed: submitNews)
+        Button(_news == null ? "Submit" : "Update", onPressed: submitNews)
       ];
 
   void submitNews() {
@@ -109,17 +116,34 @@ class _AddNewsScreenState extends State<AddNewsScreen> {
     if (formKeyState == null || !formKeyState.validate()) return;
     formKeyState.save();
     News news = News.fromJson(formKeyState.value);
-    var contents = paragraphs.where((e) => e.isNotEmpty).toList();
+    var contents = _paragraphs.where((e) => e.isNotEmpty).toList();
     contents = contents.map((e) => e.clearMultipleSpaces()).toList();
-    news = news.copyWith(contents: contents);
+    news = news.copyWith(
+        id: _news?.id, contents: contents, createdAt: _news?.createdAt);
+
     logger.d(news.toInsertNews);
-    _addNewsCubit.addNews(news);
+    logger.d(news.toString());
+    logger.d(_news.toString());
+    logger.d("isSame: ${news == _news}");
+
+    if (news == _news) {
+      context.snackbar.showSnackBar(SnackbarWidget("Tidak ada perubahan data",
+          state: SnackbarState.normal));
+      AppRoute.back();
+      return;
+    }
+
+    if (_news == null) {
+      _addNewsCubit.addNews(news);
+    } else {
+      _addNewsCubit.updateNews(news);
+    }
   }
 
   List<Widget> getNewParagraph() {
     List<Widget> textFields = [];
-    for (var i = 0; i < paragraphs.length; i++) {
-      final paragraph = paragraphs[i];
+    for (var i = 0; i < _paragraphs.length; i++) {
+      final paragraph = _paragraphs[i];
       _formKey.currentState?.fields['paragraph_$i']?.didChange(paragraph);
       textFields.add(_contentsBerita(i));
     }
@@ -132,29 +156,30 @@ class _AddNewsScreenState extends State<AddNewsScreen> {
               flex: 2,
               child: TextFieldWidget(
                 'paragraph_$i',
+                initialValue: _paragraphs[i],
                 hint: "Content ${i + 1}",
                 keyboardType: TextInputType.multiline,
                 inputAction: TextInputAction.newline,
                 disableValidator: i != 0,
                 onChanged: (p0) {
                   if (p0 == null || p0.isEmpty) {
-                    paragraphs[i] = '';
+                    _paragraphs[i] = '';
                     setState(() {});
                     return;
                   }
                   setState(() {
-                    paragraphs[i] = p0;
+                    _paragraphs[i] = p0;
                   });
                 },
               )),
-          paragraphs.length == 1
+          _paragraphs.length == 1
               ? Container()
               : Container(
                   alignment: Alignment.center,
                   child: IconButton(
                       onPressed: () {
                         setState(() {
-                          paragraphs.removeAt(i);
+                          _paragraphs.removeAt(i);
                         });
                       },
                       icon: const Icon(Icons.close)))
@@ -162,7 +187,7 @@ class _AddNewsScreenState extends State<AddNewsScreen> {
       );
 
   Widget buttonAdd() {
-    if (paragraphs.length == 5) return Container();
+    if (_paragraphs.length == 5) return Container();
     return DottedBorder(
         borderType: BorderType.RRect,
         radius: const Radius.circular(10),
@@ -173,7 +198,7 @@ class _AddNewsScreenState extends State<AddNewsScreen> {
           borderRadius: BorderRadius.circular(10),
           onTap: () {
             setState(() {
-              paragraphs.add('');
+              _paragraphs.add('');
             });
           },
           child: Container(

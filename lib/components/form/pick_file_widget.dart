@@ -23,6 +23,7 @@ class PickFileWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return FormBuilderField<String>(
       name: keyName,
+      initialValue: filePaths.isNotEmpty ? filePaths.first : null,
       validator: FormBuilderValidators.required(),
       builder: (FormFieldState<String> field) => InputDecorator(
         decoration: InputDecoration(
@@ -56,9 +57,11 @@ class PickFileWidget extends StatelessWidget {
                                 ),
                               );
                             },
+                            fit: BoxFit.cover,
                           )
                         : Image.file(
                             File(ttd),
+                            fit: BoxFit.cover,
                           ),
                   )
 

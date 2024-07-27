@@ -8,7 +8,6 @@ class News with NewsMappable {
   final String title;
   final String image;
   final List<String>? contents;
-  final String createdBy;
   final DateTime? createdAt;
 
   const News({
@@ -16,7 +15,6 @@ class News with NewsMappable {
     this.title = '',
     this.image = '',
     this.contents,
-    this.createdBy = '',
     this.createdAt,
   });
 
