@@ -82,7 +82,7 @@ class SuratPengajuanTemplate {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                     Text(
-                        "Bekasi, ${(createdAt ?? DateTime.now()).formatWithoutTime}",
+                        "Jakarta, ${(createdAt ?? DateTime.now()).formatWithoutTime}",
                         style: const TextStyle(color: PdfColors.white)),
                     Text("KETUA RW 09"),
                     Padding(
@@ -98,7 +98,7 @@ class SuratPengajuanTemplate {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                     Text(
-                        "Bekasi, ${(createdAt ?? DateTime.now()).formatWithoutTime}"),
+                        "Jakarta, ${(createdAt ?? DateTime.now()).formatWithoutTime}"),
                     Text("KETUA RT 0$rt"),
                     Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8),

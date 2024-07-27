@@ -5,14 +5,18 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import '../../components/export_components.dart';
 import '../../di/injection.dart';
 import '../../models/enums/role.dart';
+import '../../models/enums/steps.dart';
 import '../../models/pengajuan_surat.dart';
+import '../../repository/shared_preference_repository.dart';
 import '../../utils/export_utils.dart';
 import '../preview_pengajuan/preview_pengajuan_screen.dart';
 import 'cubit/signature_cubit.dart';
 
 class SignatureScreen extends StatefulWidget {
-  const SignatureScreen({super.key, required this.pengajuanSurat});
-  final PengajuanSurat pengajuanSurat;
+  const SignatureScreen(
+      {super.key, this.pengajuanSurat, this.pengajuanSuratId});
+  final PengajuanSurat? pengajuanSurat;
+  final int? pengajuanSuratId;
 
   @override
   State<SignatureScreen> createState() => _SignatureScreenState();
@@ -23,32 +27,45 @@ class _SignatureScreenState extends State<SignatureScreen> {
   late final SignatureCubit _signatureCubit;
   late final LoadingDialog _loadingDialog;
   late PengajuanSurat _newPengajuanSurat;
+  late Role role;
 
   @override
   void initState() {
     super.initState();
     _loadingDialog = getIt<LoadingDialog>();
     _signatureCubit = getIt<SignatureCubit>();
-    _newPengajuanSurat = widget.pengajuanSurat;
+    _newPengajuanSurat = widget.pengajuanSurat ??
+        PengajuanSurat(id: widget.pengajuanSuratId ?? 0);
     _signatureCubit.init(_newPengajuanSurat);
+    role = getIt<SharedPreferenceRepository>().getRole();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppbarWidget("Form Pengajuan Surat"),
-      body: BlocListener<SignatureCubit, SignatureState>(
+      body: BlocConsumer<SignatureCubit, SignatureState>(
         bloc: _signatureCubit,
         listener: (context, state) {
+          logger.d("state: $state");
           _loadingDialog.show(context, state.isLoading);
           final ttdPaths = state.filePaths;
+          _newPengajuanSurat = state.pengajuanSurat;
 
           if (ttdPaths.isNotEmpty) {
             _formKey.currentState?.fields["ttd"]
                 ?.didChange(state.filePaths.first);
           }
 
-          _newPengajuanSurat = state.pengajuanSurat;
+          _formKey.currentState?.fields["no_surat"]
+              ?.didChange(_newPengajuanSurat.noSurat);
+
+          if (state.pengajuanSurat.steps == Steps.diterima) {
+            _loadingDialog.dismiss();
+            AppRoute.to(PreviewPengajuanScreen(
+                    pengajuanSurat: state.pengajuanSurat, role: role))
+                .then((value) => AppRoute.back());
+          }
 
           if (state.isSuccess) {
             context.snackbar.showSnackBar(
@@ -57,9 +74,13 @@ class _SignatureScreenState extends State<SignatureScreen> {
           if (state.isError) {
             context.snackbar.showSnackBar(
                 SnackbarWidget(state.message, state: SnackbarState.error));
+
+            if (state.message.contains("Tidak Ditemukan")) {
+              AppRoute.back();
+            }
           }
         },
-        child: FormBuilder(
+        builder: (context, state) => FormBuilder(
           key: _formKey,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -68,7 +89,7 @@ class _SignatureScreenState extends State<SignatureScreen> {
               children: [
                 TextFieldWidget(
                   "no_surat",
-                  initialValue: _newPengajuanSurat.noSurat,
+                  initialValue: state.pengajuanSurat.noSurat,
                   label: "Nomor Surat",
                   hint: "xx/xx/xxxx",
                 ),
@@ -76,16 +97,10 @@ class _SignatureScreenState extends State<SignatureScreen> {
                   padding: EdgeInsets.symmetric(vertical: 8.0),
                   child: Text("Tanda Tangan"),
                 ),
-                BlocSelector<SignatureCubit, SignatureState, List<String>>(
-                  bloc: _signatureCubit,
-                  selector: (state) => state.filePaths,
-                  builder: (context, state) {
-                    return PickFileWidget(
-                      "ttd",
-                      filePaths: state,
-                      pickFile: _signatureCubit.pickSignature,
-                    );
-                  },
+                PickFileWidget(
+                  "ttd",
+                  filePaths: state.filePaths,
+                  pickFile: _signatureCubit.pickSignature,
                 ),
                 const SpacerWidget(16),
                 BlocSelector<SignatureCubit, SignatureState, Role>(

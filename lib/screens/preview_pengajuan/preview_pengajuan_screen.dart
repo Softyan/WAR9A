@@ -60,17 +60,12 @@ class _PreviewPengajuanScreenState extends State<PreviewPengajuanScreen> {
                 SnackbarWidget(state.message, state: SnackbarState.success));
             final steps = _pengajuanSurat.steps;
 
-            if (steps == Steps.pengajuan) {
-              AppRoute.clearAll(const MainScreen());
-            }
-
-            if (steps != Steps.diterima && widget.refreshBack) {
+            if (steps != Steps.diterima) {
               if (widget.refreshBack) {
                 AppRoute.popUntil("Pengajuan Surat");
-              } else {
-                AppRoute.clearAll(const MainScreen());
               }
             }
+            AppRoute.clearAll(const MainScreen());
           }
           if (state.isError) {
             context.snackbar.showSnackBar(

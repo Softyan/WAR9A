@@ -55,6 +55,7 @@ class NotificationCubit extends Cubit<NotificationState> {
           state.copyWith(message: message, statusState: StatusState.failure),
     );
     emit(newState);
+    init();
   }
 
   void readNotification(String notificationId) async {

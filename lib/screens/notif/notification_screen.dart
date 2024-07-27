@@ -4,8 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../components/export_components.dart';
 import '../../di/injection.dart';
 import '../../models/notification.dart' as model;
+import '../../models/notification_data.dart';
 import '../../res/export_res.dart';
-import '../../utils/app_context.dart';
+import '../../utils/export_utils.dart';
+import '../signature/signature_screen.dart';
 import 'cubit/notification_cubit.dart';
 import 'item_notification.dart';
 
@@ -80,14 +82,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   },
                   child: ListWidget<model.Notification>(
                     state.notifications,
+                    scrollPhysics: const AlwaysScrollableScrollPhysics(),
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     itemBuilder: (BuildContext context, model.Notification item,
                             int index) =>
                         ItemNotification(
                       notification: item,
-                      onClick: () {
-                        _notificationCubit.readNotification(item.id);
-                      },
+                      onClick: () => _navigateSignature(item),
                     ),
                   ),
                 ))
@@ -97,5 +98,23 @@ class _NotificationScreenState extends State<NotificationScreen> {
         ),
       ),
     );
+  }
+
+  void _navigateSignature(model.Notification item) {
+    final notifData = NotificationData.fromJson(item.data);
+
+    if (!item.isRead) {
+      _notificationCubit.readNotification(item.id);
+      AppRoute.to(SignatureScreen(
+        pengajuanSuratId: notifData.id,
+      )).then((value) {
+        _notificationCubit.init();
+      });
+      return;
+    }
+
+    AppRoute.to(SignatureScreen(
+      pengajuanSuratId: notifData.id,
+    ));
   }
 }

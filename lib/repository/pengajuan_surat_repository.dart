@@ -19,6 +19,7 @@ import 'notification_repository.dart';
 import 'shared_preference_repository.dart';
 
 abstract class PengajuanSuratRepository {
+  Future<BaseResult<PengajuanSurat>> getPengajuanSurat(int id);
   Future<BaseResult<List<PengajuanSurat>>> getListPengajuanSurat({int page});
   Future<BaseResult<PengajuanSurat>> ajukanSuratPengajuan(
       PengajuanSurat pengajuanSurat);
@@ -70,6 +71,26 @@ class PengajuanSuratRepositoryImpl implements PengajuanSuratRepository {
       final surats =
           response.map((element) => PengajuanSurat.fromJson(element)).toList();
       return DataResult(surats);
+    } on PostgrestException catch (e) {
+      return ErrorResult(e.message);
+    } catch (e) {
+      return ErrorResult(e.toString());
+    }
+  }
+
+  @override
+  Future<BaseResult<PengajuanSurat>> getPengajuanSurat(int id) async {
+    try {
+      final response = await _supabase
+          .from(pengajuanSuratTable)
+          .select()
+          .eq('id', id)
+          .maybeSingle();
+
+      if (response == null) {
+        return ErrorResult("Pengajuan Surat Tidak Ditemukan");
+      }
+      return DataResult(PengajuanSurat.fromJson(response));
     } on PostgrestException catch (e) {
       return ErrorResult(e.message);
     } catch (e) {
@@ -223,9 +244,39 @@ class PengajuanSuratRepositoryImpl implements PengajuanSuratRepository {
 
       logger.d("response: $response");
 
+      final newPengajuanSurat = PengajuanSurat.fromJson(response);
+
       // send notification to rw
-      // TODO : send notification to rw
-      return DataResult(PengajuanSurat.fromJson(response));
+      final userResponse = await _supabase
+          .from(Constants.table.user)
+          .select()
+          .eq('role', Role.rw.toValue());
+      logger.d(userResponse);
+      if (userResponse.isEmpty) return DataResult(newPengajuanSurat);
+      final receiver = model.User.fromJson(userResponse.first);
+      logger.d("reciver => $userResponse");
+
+      // send notification
+      final notifData = NotificationData(
+          type: NotificationDataType.pengajuan, id: newPengajuanSurat.id);
+      final notif = Notification(
+          from: currentUser.id,
+          to: receiver.id,
+          message: "Pengajuan Surat Baru",
+          userType: Role.rw,
+          data: notifData.toMap());
+
+      logger.d("notif: $notif");
+
+      final notifResponse =
+          await _notificationRepository.createNotification(notif);
+
+      logger.d("notifResponse: $notifResponse");
+
+      if (notifResponse is ErrorResult) {
+        return ErrorResult(notifResponse.onErrorResult);
+      }
+      return DataResult(newPengajuanSurat);
     } on PostgrestException catch (e) {
       logger.e("Postgrest Exception: ${e.message}");
       return ErrorResult(e.message);

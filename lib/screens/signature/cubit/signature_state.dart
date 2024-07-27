@@ -7,7 +7,7 @@ class SignatureState extends BaseState with SignatureStateMappable {
   final PengajuanSurat pengajuanSurat;
   const SignatureState(
       {super.message,
-      super.statusState,
+      super.statusState = StatusState.loading,
       this.filePaths = const [],
       this.role = Role.warga,
       this.pengajuanSurat = const PengajuanSurat()});
