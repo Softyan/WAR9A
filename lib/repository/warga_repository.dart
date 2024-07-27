@@ -1,11 +1,12 @@
 import 'package:injectable/injectable.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as client;
 
 import '../data/data_result.dart';
+import '../models/enums/role.dart';
 import '../models/filter_warga.dart';
 import '../models/user.dart';
 import '../utils/export_utils.dart';
+import 'shared_preference_repository.dart';
 
 abstract class WargaRepository {
   Future<BaseResult<List<User>>> getDataWarga(
@@ -16,8 +17,8 @@ abstract class WargaRepository {
 @Injectable(as: WargaRepository)
 class WargaRepositoryImpl implements WargaRepository {
   final client.SupabaseClient _supabase;
-  final SharedPreferences _preferences;
-  WargaRepositoryImpl(this._supabase, this._preferences);
+  final SharedPreferenceRepository _sharedPreferenceRepository;
+  WargaRepositoryImpl(this._supabase, this._sharedPreferenceRepository);
 
   @override
   Future<BaseResult<List<User>>> getDataWarga(
@@ -27,15 +28,21 @@ class WargaRepositoryImpl implements WargaRepository {
       return ErrorResult("Masukkan pencarian lebih dari 3 huruf");
     }
     try {
-      final savedUser =
-          _preferences.getString(Constants.sharedPreferences.user);
-      if (savedUser == null || savedUser.isEmpty) {
+      final savedUser = _sharedPreferenceRepository.getCurrentUser();
+      final role = _sharedPreferenceRepository.getRole();
+      if (savedUser == null) {
         return ErrorResult("User is Empty");
       }
-      final User(:id) = User.fromJson(savedUser);
+
+      final User(:id, :rt) = savedUser;
 
       /// Base query
       var query = _supabase.from(Constants.table.user).select().neq('id', id);
+
+      /// Filter by role & rt
+      if (role == Role.rt) {
+        query = query.eq('rt', rt);
+      }
 
       /// Search with name or nik
       if (search != null && search.isNotEmpty && search.length > 3) {

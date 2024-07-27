@@ -11,7 +11,8 @@ import '../../utils/export_utils.dart';
 import 'cubit/data_surat_cubit.dart';
 
 class AddDataSuratScreen extends StatefulWidget {
-  const AddDataSuratScreen({super.key});
+  final Surat? surat;
+  const AddDataSuratScreen({super.key, this.surat});
 
   @override
   State<AddDataSuratScreen> createState() => _AddDataSuratScreenState();
@@ -21,18 +22,23 @@ class _AddDataSuratScreenState extends State<AddDataSuratScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   late final DataSuratCubit _dataSuratCubit;
   late final LoadingDialog _loadingDialog;
+  late Surat? _newSurat;
+  bool _isUpdate = false;
 
   @override
   void initState() {
     super.initState();
     _dataSuratCubit = getIt<DataSuratCubit>();
     _loadingDialog = getIt<LoadingDialog>();
+    _newSurat = widget.surat;
+    _isUpdate = _newSurat != null;
+    _dataSuratCubit.initial(_newSurat);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppbarWidget("Tambah Data Surat"),
+      appBar: AppbarWidget("${_isUpdate ? "Ubah" : "Tambah"} Data Surat"),
       body: BlocListener<DataSuratCubit, DataSuratState>(
         bloc: _dataSuratCubit,
         listener: (context, state) {
@@ -41,7 +47,7 @@ class _AddDataSuratScreenState extends State<AddDataSuratScreen> {
           if (state.isSuccess) {
             context.snackbar.showSnackBar(
                 SnackbarWidget(state.message, state: SnackbarState.success));
-            AppRoute.back(true);
+            AppRoute.back(_isUpdate ? state.surat : true);
           }
           if (state.isError) {
             context.snackbar.showSnackBar(
@@ -63,25 +69,28 @@ class _AddDataSuratScreenState extends State<AddDataSuratScreen> {
   }
 
   List<Widget> get _contents => [
-        const TextFieldWidget(
+        TextFieldWidget(
           'from',
           hint: "Jhon Doe",
           label: "Asal Surat",
+          initialValue: _newSurat?.from,
         ),
-        const TextFieldWidget(
+        TextFieldWidget(
           'no_surat',
           hint: "xx/xx/xxxx",
           label: "Nomor Surat",
+          initialValue: _newSurat?.noSurat,
         ),
-        const TextFieldWidget(
+        TextFieldWidget(
           'perihal',
           label: "Perihal",
+          initialValue: _newSurat?.perihal,
         ),
         DropdownfieldWidget<bool>(
           'is_surat_masuk',
           const [true, false],
           label: 'Status Surat',
-          initialValue: true,
+          initialValue: _newSurat?.isSuratMasuk ?? true,
           onItemsBuilder: (stay) => DropdownMenuItem(
               value: stay, child: Text(stay ? "Surat Masuk" : "Surat Keluar")),
           validator: FormBuilderValidators.required(),
@@ -101,7 +110,7 @@ class _AddDataSuratScreenState extends State<AddDataSuratScreen> {
         ),
         const SpacerWidget(8),
         Button(
-          "Simpan",
+          !_isUpdate ? "Simpan" : "Edit",
           onPressed: submitDataSurat,
           width: context.mediaSize.width,
         )
@@ -114,8 +123,29 @@ class _AddDataSuratScreenState extends State<AddDataSuratScreen> {
 
     Surat surat = Surat.fromJson(formKeyState.value);
     final filePaths = formKeyState.value['image'];
-    surat = surat.copyWith(suratUrls: [filePaths]);
+    surat = surat.copyWith(
+        id: _newSurat?.id,
+        suratUrls: [filePaths],
+        createdAt: _newSurat?.createdAt,
+        role: _newSurat?.role,
+        rt: _newSurat?.rt);
 
-    _dataSuratCubit.addSurat(surat);
+    logger.d(surat);
+    logger.d(_newSurat);
+    logger.d("isSame: ${surat == _newSurat}");
+
+    if (surat == _newSurat) {
+      context.snackbar.showSnackBar(SnackbarWidget(
+          "Data Surat tidak ada perubahan",
+          state: SnackbarState.normal));
+      AppRoute.back(surat);
+      return;
+    }
+
+    if (!_isUpdate) {
+      _dataSuratCubit.addSurat(surat);
+    } else {
+      _dataSuratCubit.updateSurat(surat);
+    }
   }
 }

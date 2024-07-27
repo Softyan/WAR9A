@@ -56,17 +56,7 @@ class NewsRepositoryImpl implements NewsRepository {
       var newNews = News.fromJson(insertedNews.first);
 
       /// upload cover news
-      final File imageFile = File(news.image);
-      final String imageId =
-          DateTime.now().formattedDate(pattern: "ddMMyyHHmm");
-      final String uploadPath = "cover/news_$imageId${p.extension(news.image)}";
-      await _supabase.storage
-          .from(Constants.table.news)
-          .upload(uploadPath, imageFile);
-
-      /// get cover image url
-      final String imageUrl =
-          _supabase.storage.from(newsTable).getPublicUrl(uploadPath);
+      final imageUrl = await uploadCoverNews(newNews.image);
 
       /// update cover image
       final result = await _supabase
@@ -105,6 +95,18 @@ class NewsRepositoryImpl implements NewsRepository {
         return ErrorResult("News not found");
       }
 
+      /// check image news
+      final coverNews = news.image;
+      if (coverNews.isEmpty) {
+        return ErrorResult("Cover news not found");
+      }
+
+      /// upload cover news if file changed
+      if (!coverNews.startsWith("http")) {
+        final newCoverImg = await uploadCoverNews(coverNews);
+        news = news.copyWith(image: newCoverImg);
+      }
+
       final response = await _supabase
           .from(newsTable)
           .update(news.toMap())
@@ -117,5 +119,19 @@ class NewsRepositoryImpl implements NewsRepository {
     } catch (e) {
       return ErrorResult(e.toString());
     }
+  }
+
+  Future<String> uploadCoverNews(String imagePath) async {
+    final File imageFile = File(imagePath);
+    final String imageId = DateTime.now().formattedDate(pattern: "ddMMyyHHmm");
+    final String uploadPath = "cover/news_$imageId${p.extension(imagePath)}";
+    await _supabase.storage
+        .from(Constants.table.news)
+        .upload(uploadPath, imageFile);
+
+    /// get cover image url
+    final String imageUrl =
+        _supabase.storage.from(newsTable).getPublicUrl(uploadPath);
+    return imageUrl;
   }
 }

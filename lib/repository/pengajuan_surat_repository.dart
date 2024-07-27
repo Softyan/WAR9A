@@ -45,12 +45,28 @@ class PengajuanSuratRepositoryImpl implements PengajuanSuratRepository {
   Future<BaseResult<List<PengajuanSurat>>> getListPengajuanSurat(
       {int page = 1}) async {
     try {
-      final response = await _supabase
-          .from(pengajuanSuratTable)
-          .select()
+      final role = _sharedPreferenceRepository.getRole();
+      final user = _sharedPreferenceRepository.getCurrentUser();
+
+      if (user == null) {
+        return ErrorResult("User not found");
+      }
+
+      var query = _supabase.from(pengajuanSuratTable).select();
+
+      if (role == Role.warga) {
+        query = query.eq('from', user.id);
+      }
+
+      if (role == Role.rt) {
+        query = query.eq('rt', user.rt);
+      }
+
+      final response = await query
           .order('created_at', ascending: false)
           .range((page - 1) * 10, page * 10)
           .limit(10);
+
       final surats =
           response.map((element) => PengajuanSurat.fromJson(element)).toList();
       return DataResult(surats);

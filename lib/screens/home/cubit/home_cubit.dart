@@ -95,13 +95,13 @@ class HomeCubit extends Cubit<HomeState> {
   List<ItemDashboard> _getMenuDashboard(Role? role) {
     logger.d("role: $role");
     return switch (role) {
-      Role.rw || Role.rt => _contentsRTRW,
+      Role.rw || Role.rt => _contentsRTRW(role ?? Role.rw),
       Role.sekretaris => _contentsSekre,
       _ => _contentsWarga
     };
   }
 
-  List<ItemDashboard> get _contentsRTRW => [
+  List<ItemDashboard> _contentsRTRW(Role role) => [
         ItemDashboard(
             title: "Pengajuan Surat",
             path: Assets.icons.pengajuanSurat.path,
@@ -109,7 +109,7 @@ class HomeCubit extends Cubit<HomeState> {
         ItemDashboard(
             title: "Data Warga",
             path: Assets.icons.dataWarga.path,
-            destination: const DataWargaScreen()),
+            destination: DataWargaScreen(role: role)),
         ItemDashboard(
             title: "Data Surat",
             path: Assets.icons.dataSurat.path,

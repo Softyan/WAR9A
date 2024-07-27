@@ -9,6 +9,7 @@ import '../../res/export_res.dart';
 import '../../utils/export_utils.dart';
 import 'add_data_surat_screen.dart';
 import 'cubit/data_surat_cubit.dart';
+import 'detail_data_surat_screen.dart';
 import 'item_surat.dart';
 
 class DataSuratScreen extends StatefulWidget {
@@ -41,6 +42,7 @@ class _DataSuratScreenState extends State<DataSuratScreen> {
         children: [
           Expanded(
               child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SearchWidget(
                 onSubmitted: (String query) {
@@ -51,33 +53,26 @@ class _DataSuratScreenState extends State<DataSuratScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
+                child: Wrap(
+                  spacing: 8.0,
                   children: [
-                    Expanded(
-                      flex: 5,
-                      child: Wrap(
-                        spacing: 8.0,
-                        children: [
-                          ChoiceChipWidget(
-                            "Surat Masuk",
-                            _isSuratMasuk == true,
-                            onSelected: (value) {
-                              setState(() => _isSuratMasuk = true);
-                              _dataSuratCubit.getDataSurat(
-                                  isSuratMasuk: true, query: _query);
-                            },
-                          ),
-                          ChoiceChipWidget(
-                            "Surat Keluar",
-                            _isSuratMasuk == false,
-                            onSelected: (value) {
-                              setState(() => _isSuratMasuk = false);
-                              _dataSuratCubit.getDataSurat(
-                                  isSuratMasuk: false, query: _query);
-                            },
-                          ),
-                        ],
-                      ),
+                    ChoiceChipWidget(
+                      "Surat Masuk",
+                      _isSuratMasuk == true,
+                      onSelected: (value) {
+                        setState(() => _isSuratMasuk = true);
+                        _dataSuratCubit.getDataSurat(
+                            isSuratMasuk: true, query: _query);
+                      },
+                    ),
+                    ChoiceChipWidget(
+                      "Surat Keluar",
+                      _isSuratMasuk == false,
+                      onSelected: (value) {
+                        setState(() => _isSuratMasuk = false);
+                        _dataSuratCubit.getDataSurat(
+                            isSuratMasuk: false, query: _query);
+                      },
                     ),
                   ],
                 ),
@@ -85,7 +80,7 @@ class _DataSuratScreenState extends State<DataSuratScreen> {
             ],
           )),
           Expanded(
-              flex: 4,
+              flex: 5,
               child: BlocBuilder<DataSuratCubit, DataSuratState>(
                 bloc: _dataSuratCubit,
                 builder: (context, state) {
@@ -114,6 +109,12 @@ class _DataSuratScreenState extends State<DataSuratScreen> {
                       return ItemSurat(
                         surat: item,
                         index: (index + 1),
+                        onClick: () => AppRoute.to(
+                          DetailDataSuratScreen(surat: item),
+                        ).then((value) {
+                          _dataSuratCubit.getDataSurat(
+                              isSuratMasuk: _isSuratMasuk, query: _query);
+                        }),
                       );
                     }),
                   );

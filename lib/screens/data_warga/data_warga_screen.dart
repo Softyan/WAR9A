@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../../components/export_components.dart';
+import '../../components/form/choice_chip_widget.dart';
 import '../../di/injection.dart';
+import '../../models/enums/role.dart';
 import '../../models/filter_warga.dart';
 import '../../models/user.dart';
 import '../../repository/warga_repository.dart';
@@ -14,7 +16,8 @@ import 'components/item_data_warga.dart';
 import 'cubit/data_warga_cubit.dart';
 
 class DataWargaScreen extends StatefulWidget {
-  const DataWargaScreen({super.key});
+  final Role role;
+  const DataWargaScreen({super.key, required this.role});
 
   @override
   State<DataWargaScreen> createState() => _DataWargaScreenState();
@@ -27,6 +30,7 @@ class _DataWargaScreenState extends State<DataWargaScreen> {
   int? selectedRt;
   String? domisili;
   FilterWarga? filter;
+  bool? isStay;
 
   @override
   void initState() {
@@ -48,18 +52,61 @@ class _DataWargaScreenState extends State<DataWargaScreen> {
           Row(
             children: [
               Expanded(
-                child: SearchWidget(
-                  padding: const EdgeInsets.only(left: 16, top: 16, bottom: 16),
-                  onSubmitted: (String query) {
-                    this.query = query;
-                    _dataWargaCubit.getDataWarga(search: query);
-                  },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SearchWidget(
+                      padding:
+                          const EdgeInsets.only(left: 16, top: 16, bottom: 8),
+                      onSubmitted: (String query) {
+                        this.query = query;
+                        _dataWargaCubit.getDataWarga(search: query);
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      child: widget.role == Role.rt
+                          ? Wrap(
+                              spacing: 8.0,
+                              children: [
+                                ChoiceChipWidget(
+                                  "Menetap",
+                                  isStay == true,
+                                  onSelected: (value) {
+                                    setState(
+                                        () => isStay = value ? true : null);
+                                    _dataWargaCubit.getDataWarga(
+                                        search: query,
+                                        filter: FilterWarga(isStay: isStay));
+                                  },
+                                ),
+                                ChoiceChipWidget(
+                                  "Sementara",
+                                  isStay == false,
+                                  onSelected: (value) {
+                                    setState(
+                                        () => isStay = value ? false : null);
+                                    _dataWargaCubit.getDataWarga(
+                                        search: query,
+                                        filter: FilterWarga(isStay: isStay));
+                                  },
+                                ),
+                              ],
+                            )
+                          : const SizedBox(),
+                    )
+                  ],
                 ),
               ),
-              IconButton(
-                icon: Assets.icons.icFilter.svg(),
-                onPressed: showFilter,
-              )
+              widget.role == Role.rw
+                  ? IconButton(
+                      icon: Assets.icons.icFilter.svg(),
+                      onPressed: showFilter,
+                    )
+                  : const Padding(
+                      padding: EdgeInsets.only(right: 16),
+                    )
             ],
           ),
           Expanded(

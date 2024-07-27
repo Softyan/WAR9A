@@ -17,6 +17,10 @@ class DataSuratCubit extends Cubit<DataSuratState> {
   DataSuratCubit(this._suratRepository, this._globalHelpers)
       : super(const DataSuratState());
 
+  void initial(Surat? newSurat) {
+    emit(state.copyWith(surat: newSurat, pathImage: newSurat?.suratUrls.first));
+  }
+
   void getDataSurat({bool isSuratMasuk = true, String? query}) async {
     emit(state.copyWith(statusState: StatusState.loading));
 
@@ -38,8 +42,10 @@ class DataSuratCubit extends Cubit<DataSuratState> {
 
     final result = await _suratRepository.addSurat(surat);
     final newState = result.when(
-      result: (data) =>
-          state.copyWith(surat: data, statusState: StatusState.success),
+      result: (data) => state.copyWith(
+          surat: data,
+          statusState: StatusState.success,
+          message: "Surat has been added"),
       error: (message) =>
           state.copyWith(statusState: StatusState.failure, message: message),
     );
@@ -56,6 +62,32 @@ class DataSuratCubit extends Cubit<DataSuratState> {
         error: (String message) =>
             state.copyWith(statusState: StatusState.failure, message: message));
 
+    emit(newState);
+  }
+
+  void deleteSurat(int id) async {
+    emit(state.copyWith(statusState: StatusState.loading));
+
+    final result = await _suratRepository.deleteSurat(id);
+    final newState = result.when(
+        result: (String data) =>
+            state.copyWith(statusState: StatusState.success, message: data),
+        error: (String message) =>
+            state.copyWith(statusState: StatusState.failure, message: message));
+    emit(newState);
+  }
+
+  void updateSurat(Surat surat) async {
+    emit(state.copyWith(statusState: StatusState.loading));
+
+    final result = await _suratRepository.updateSurat(surat);
+    final newState = result.when(
+        result: (Surat data) => state.copyWith(
+            statusState: StatusState.success,
+            surat: data,
+            message: "Surat updated"),
+        error: (String message) =>
+            state.copyWith(statusState: StatusState.failure, message: message));
     emit(newState);
   }
 }
