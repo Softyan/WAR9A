@@ -1,4 +1,4 @@
-package id.my.mufidz.war9a
+package id.my.softzy.war9a
 
 import io.flutter.embedding.android.FlutterActivity
 
