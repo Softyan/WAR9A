@@ -72,20 +72,29 @@ class AuthRepositoryImpl implements AuthRepository {
       final savedUser =
           _preferences.getString(Constants.sharedPreferences.tempUserRegister);
 
-      if (savedUser == null || savedUser.isEmpty) {
-        return ErrorResult("UserId is Empty");
+      final User? currentUser = _auth.currentUser;
+
+      if (savedUser != null && savedUser.isNotEmpty) {
+        final model.User(:id, :email) = model.User.fromJson(savedUser);
+        user = user.copyWith(id: id, email: email);
+      } else if (currentUser != null) {
+        final User(:id, :email) = currentUser;
+        user = user.copyWith(id: id, email: email);
+      } else {
+        return ErrorResult("User not found");
       }
-
-      final model.User(:id, :email) = model.User.fromJson(savedUser);
-
-      user = user.copyWith(id: id, email: email);
 
       final result = await _supabase
           .from(Constants.table.user)
           .insert(user.toMap())
-          .select();
+          .select()
+          .maybeSingle();
 
-      final userResult = model.User.fromJson(result[0]);
+      if (result == null) {
+        return ErrorResult("User not found");
+      }
+
+      final userResult = model.User.fromJson(result);
 
       await _preferences.remove(Constants.sharedPreferences.isPersonalForm);
       await _preferences.remove(Constants.sharedPreferences.tempUserRegister);
