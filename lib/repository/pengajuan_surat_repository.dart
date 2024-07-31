@@ -63,10 +63,9 @@ class PengajuanSuratRepositoryImpl implements PengajuanSuratRepository {
         query = query.eq('rt', user.rt);
       }
 
-      final response = await query
-          .order('created_at', ascending: false)
-          .range((page - 1) * 10, page * 10)
-          .limit(10);
+      final response = await query.order('created_at', ascending: false);
+      // .range((page - 1) * 10, page * 10)
+      // .limit(10);
 
       final surats =
           response.map((element) => PengajuanSurat.fromJson(element)).toList();
@@ -259,14 +258,32 @@ class PengajuanSuratRepositoryImpl implements PengajuanSuratRepository {
       // send notification
       final notifData = NotificationData(
           type: NotificationDataType.pengajuan, id: newPengajuanSurat.id);
-      final notif = Notification(
-          from: currentUser.id,
-          to: receiver.id,
-          message: "Pengajuan Surat Baru",
-          userType: Role.rw,
-          data: notifData.toMap());
+
+      Notification? notif;
+
+      if (currentRole == Role.rw) {
+        notif = Notification(
+            from: currentUser.id,
+            to: newPengajuanSurat.from,
+            message: "Pengajuan surat telah ditanda tangani",
+            userType: Role.warga,
+            data: notifData.toMap());
+      }
+
+      if (currentRole == Role.rt) {
+        notif = Notification(
+            from: currentUser.id,
+            to: receiver.id,
+            message: "Pengajuan Surat Baru",
+            userType: Role.rw,
+            data: notifData.toMap());
+      }
 
       logger.d("notif: $notif");
+
+      if (notif == null) {
+        return DataResult(newPengajuanSurat);
+      }
 
       final notifResponse =
           await _notificationRepository.createNotification(notif);

@@ -24,7 +24,7 @@ class ItemPengajuanSurat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final PengajuanSurat(:name, :steps, :keperluan) = pengajuanSurat;
+    final PengajuanSurat(:name, :keperluan) = pengajuanSurat;
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: InkWell(
@@ -79,7 +79,7 @@ class ItemPengajuanSurat extends StatelessWidget {
                           style: War9aTextstyle.normal.copyWith(fontSize: 8),
                         ),
                         Text(
-                          steps.toValue(),
+                          getStatusText(),
                           style: War9aTextstyle.blackW600Font16
                               .copyWith(fontSize: 8),
                         )
@@ -143,5 +143,13 @@ class ItemPengajuanSurat extends StatelessWidget {
     AppRoute.to(SignatureScreen(
       pengajuanSurat: pengajuanSurat,
     )).then((value) => onRefresh?.call());
+  }
+
+  String getStatusText() {
+    if (pengajuanSurat.steps == Steps.ttdRw &&
+        pengajuanSurat.ttdRw.isNotEmpty) {
+      return Steps.diterima.toValue();
+    }
+    return pengajuanSurat.steps.toValue();
   }
 }

@@ -60,11 +60,17 @@ class _SignatureScreenState extends State<SignatureScreen> {
           _formKey.currentState?.fields["no_surat"]
               ?.didChange(_newPengajuanSurat.noSurat);
 
-          if (state.pengajuanSurat.steps == Steps.diterima) {
+          if (state.pengajuanSurat.steps == Steps.ttdRw ||
+              state.pengajuanSurat.steps == Steps.diterima) {
             _loadingDialog.dismiss();
             AppRoute.to(PreviewPengajuanScreen(
-                    pengajuanSurat: state.pengajuanSurat, role: role))
-                .then((value) => AppRoute.back());
+              pengajuanSurat:
+                  state.pengajuanSurat.copyWith(steps: Steps.diterima),
+              refreshBack: true,
+              role: role,
+              updateStatusPengajuan:
+                  state.pengajuanSurat.steps != Steps.diterima,
+            )).then((value) => AppRoute.back());
           }
 
           if (state.isSuccess) {
