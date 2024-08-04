@@ -60,8 +60,7 @@ class _SignatureScreenState extends State<SignatureScreen> {
           _formKey.currentState?.fields["no_surat"]
               ?.didChange(_newPengajuanSurat.noSurat);
 
-          if (state.pengajuanSurat.steps == Steps.ttdRw ||
-              state.pengajuanSurat.steps == Steps.diterima) {
+          if (state.pengajuanSurat.steps == Steps.diterima) {
             _loadingDialog.dismiss();
             AppRoute.to(PreviewPengajuanScreen(
               pengajuanSurat:

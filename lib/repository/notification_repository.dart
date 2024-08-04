@@ -77,8 +77,8 @@ class NotificationRepositoryImpl implements NotificationRepository {
           .update({isReadKey: true})
           .eq(toKey, userId)
           .select()
-          .order(isReadKey, ascending: true)
-          .order(createdAtKey, ascending: true)
+          .order(isReadKey, ascending: false)
+          .order(createdAtKey, ascending: false)
           .range((page - 1) * 10, page * 10)
           .limit(10);
       final notifications =

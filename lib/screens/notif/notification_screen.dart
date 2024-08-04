@@ -105,16 +105,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
     if (!item.isRead) {
       _notificationCubit.readNotification(item.id);
-      AppRoute.to(SignatureScreen(
-        pengajuanSuratId: notifData.id,
-      )).then((value) {
-        _notificationCubit.init();
-      });
-      return;
     }
 
     AppRoute.to(SignatureScreen(
       pengajuanSuratId: notifData.id,
-    ));
+    )).then((value) {
+      _notificationCubit.init();
+    });
   }
 }

@@ -79,6 +79,7 @@ class FormPengajuanSuratCubit extends Cubit<FormPengajuanSuratState> {
 
     if (role != Role.warga) return;
     if (!updateStatusPengajuan) return;
+    if (pengajuanSurat.ttdRw.isEmpty) return;
 
     emit(state.copyWith(statusState: StatusState.loading));
     final result =
