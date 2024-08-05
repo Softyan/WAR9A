@@ -81,7 +81,7 @@ class SignatureCubit extends Cubit<SignatureState> {
         }
 
         if (role == Role.rw && status == Steps.ttdRt) {
-          newPengajuanSurat = pengajuanSurat.copyWith(
+          newPengajuanSurat = newPengajuanSurat.copyWith(
               nameRw: data.name, idRw: data.id, steps: Steps.ttdRw);
         }
         return state.copyWith(

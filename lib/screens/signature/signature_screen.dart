@@ -49,16 +49,18 @@ class _SignatureScreenState extends State<SignatureScreen> {
         listener: (context, state) {
           logger.d("state: $state");
           _loadingDialog.show(context, state.isLoading);
-          final ttdPaths = state.filePaths;
           _newPengajuanSurat = state.pengajuanSurat;
+          final ttdPaths = state.filePaths;
+          final noSurat = _newPengajuanSurat.noSurat;
 
           if (ttdPaths.isNotEmpty) {
-            _formKey.currentState?.fields["ttd"]
-                ?.didChange(state.filePaths.first);
+            _formKey.currentState?.fields["ttd"]?.didChange(ttdPaths.first);
           }
 
-          _formKey.currentState?.fields["no_surat"]
-              ?.didChange(_newPengajuanSurat.noSurat);
+          if (noSurat.isNotEmpty) {
+            _formKey.currentState?.fields["no_surat"]
+                ?.didChange(_newPengajuanSurat.noSurat);
+          }
 
           if (state.pengajuanSurat.steps == Steps.diterima) {
             _loadingDialog.dismiss();
@@ -131,9 +133,13 @@ class _SignatureScreenState extends State<SignatureScreen> {
     formKeyState.save();
 
     logger.d(formKeyState.value);
-    var newPengajuanSurat = _newPengajuanSurat.copyWith(
-      noSurat: formKeyState.value["no_surat"].toString().trim(),
-    );
+    var newPengajuanSurat = _newPengajuanSurat;
+
+    if (role == Role.rt) {
+      newPengajuanSurat = _newPengajuanSurat.copyWith(
+        noSurat: formKeyState.value["no_surat"].toString().trim(),
+      );
+    }
 
     logger.d("role: $role");
 

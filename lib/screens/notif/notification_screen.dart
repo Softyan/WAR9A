@@ -3,10 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../components/export_components.dart';
 import '../../di/injection.dart';
+import '../../models/enums/role.dart';
 import '../../models/notification.dart' as model;
 import '../../models/notification_data.dart';
 import '../../res/export_res.dart';
 import '../../utils/export_utils.dart';
+import '../preview_pengajuan/preview_pengajuan_screen.dart';
 import '../signature/signature_screen.dart';
 import 'cubit/notification_cubit.dart';
 import 'item_notification.dart';
@@ -41,6 +43,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
         child: BlocConsumer<NotificationCubit, NotificationState>(
           bloc: _notificationCubit,
           listener: (context, state) {
+            if (state.isSuccess) {
+              AppRoute.to(PreviewPengajuanScreen(
+                pengajuanSurat: state.pengajuanSurat,
+                role: Role.warga,
+                updateStatusPengajuan: true,
+              )).then((value) => _notificationCubit.init());
+            }
+
             if (state.isError) {
               context.snackbar.showSnackBar(
                   SnackbarWidget(state.message, state: SnackbarState.error));
@@ -101,10 +111,17 @@ class _NotificationScreenState extends State<NotificationScreen> {
   }
 
   void _navigateSignature(model.Notification item) {
+    if (item.data == null) return;
     final notifData = NotificationData.fromJson(item.data);
+    final roleNotif = item.userType;
 
     if (!item.isRead) {
       _notificationCubit.readNotification(item.id);
+    }
+
+    if (roleNotif != null && item.userType == Role.warga) {
+      _notificationCubit.getDataPengajuan(notifData);
+      return;
     }
 
     AppRoute.to(SignatureScreen(
